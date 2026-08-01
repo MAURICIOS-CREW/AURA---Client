@@ -1,0 +1,65 @@
+<div class="app-container">
+  <!-- Barra de Navegación Lateral (Sidebar) -->
+  <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
+
+    <div class="brand">
+      <img src="/logo_aura.png" alt="Logo de AURA" class="logo">
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <span class="material-symbols-outlined">
+          menu
+        </span>
+      </button>
+    </div>
+    <nav class="nav-menu">
+      <ul>
+        <li routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <span class="material-symbols-outlined">dashboard_2</span> Dashboard
+        </li>
+        <li routerLink="/gatehouse" routerLinkActive="active">
+         <span class="material-symbols-outlined">security</span> Caseta</li>
+        <li routerLink="/residents" routerLinkActive="active">
+          <span class="material-symbols-outlined">person</span> Residentes
+        </li>  
+        <li class="has-submenu" [class.expanded]="isAccesosOpen">
+          <div class="menu-header" (click)="isAccesosOpen = !isAccesosOpen" style="cursor: pointer;">
+            <div class="menu-title">
+              <span class="material-symbols-outlined">campaign</span> Accesos
+            </div>
+            <span class="material-symbols-outlined arrow">keyboard_arrow_down</span>
+          </div>
+          <ul class="submenu">
+            <li routerLink="/vehiculars" routerLinkActive="active">
+              <span class="material-symbols-outlined">directions_car</span> Vehicular
+            </li>
+            <li routerLink="/pedestrians" routerLinkActive="active">
+              <span class="material-symbols-outlined">directions_walk</span> Peatonal
+            </li>
+          </ul>
+        </li>
+        <li routerLink="/reports" routerLinkActive="active">
+          <span class="material-symbols-outlined">description</span> Incidencias</li>
+        <li routerLink="/finance" routerLinkActive="active">
+          <span class="material-symbols-outlined">payments</span> Finanzas</li>
+     </ul>
+    </nav>
+  </aside>
+
+ <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-spacer"></div> 
+      
+      <div class="user-menu">
+        <div class="user-profile">
+          <span class="material-symbols-outlined">account_circle</span>
+          <span class="user-name">Administrador</span>
+        </div>
+        <button class="btn-logout">
+          <span class="material-symbols-outlined">logout</span>
+          Salir
+        </button>
+      </div>
+    </header>
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

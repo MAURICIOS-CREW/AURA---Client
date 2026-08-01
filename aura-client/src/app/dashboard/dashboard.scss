@@ -1,0 +1,122 @@
+.dashboard-wrapper {
+  background: rgba(255, 255, 255, 0.66); 
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px); 
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  margin: 20px;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    gap: 8px; 
+    list-style: none;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+  color: #333;
+}
+.dashboard-header h2 {
+  margin: 0 0 5px 0;
+  font-size: 1.8rem;
+  color: #2E6DB4; 
+}
+
+.dashboard-header p {
+  margin: 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #f0f0f0;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.card-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-icon span {
+  font-size: 28px;
+}
+.blue { background: #e0f2fe; color: #0284c7; }
+.red { background: #fee2e2; color: #dc2626; }
+.green { background: #dcfce7; color: #16a34a; }
+.purple { background: #f3e8ff; color: #9333ea; }
+.orange { background: #ffedd5; color: #ea580c; }
+
+.card-info h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b;
+}
+.card-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 5px 0;
+}
+.card-trend {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.card-trend.positive { color: #10b981; }
+.card-trend.negative { color: #ef4444; }
+
+.btn-report {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #f8fafc;
+  color: #195491; 
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.btn-report span {
+  font-size: 1.2rem;
+}
+.btn-report:hover {
+  background: #2E6DB4;
+  color: #ffffff;
+}

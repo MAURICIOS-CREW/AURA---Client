@@ -1,0 +1,122 @@
+.login-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0.4) 100%), url('/fondo.jpeg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-content {
+  width: 100%;
+  max-width: 500px; 
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-header {
+  display: flex;
+  justify-content: center; 
+  margin-bottom: 0.5rem;
+}
+
+.header-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; 
+}
+
+.logo-login {
+  width: 160px; 
+  height: auto;
+}
+
+h3 {
+  color: #1277b2;            
+  font-size: 1.7rem;         
+  font-weight: 700;
+  text-align: center;        
+  margin: 20px 0 0 0;
+}
+
+.login-desc {
+  text-align: center;
+  color: #444; 
+  font-size: 1rem;
+  font-style: italic;
+  margin-top: 5px;
+  margin-bottom: 1.5rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; 
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1277b2; 
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-group label span {
+  font-size: 1.2rem; 
+}
+
+.aura-input {
+  padding: 0.8rem 1rem;
+  border: 1px solid #b0c4de; 
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.9); 
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: #45a4e8; 
+    box-shadow: 0 0 0 3px rgba(69, 164, 232, 0.2);
+    background-color: #ffffff; 
+  }
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 0.5rem; 
+  justify-content: center;
+  padding: 0.9rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: linear-gradient(to top right, #45a4e8, #195491); 
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.3s, transform 0.1s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+  
+  &:active {
+    transform: scale(0.98); 
+  }
+}

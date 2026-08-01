@@ -1,0 +1,173 @@
+<div class="dashboard-wrapper">
+    <div class="dashboard-header">
+        <h2>Módulo de Finanzas</h2>
+        <li>
+            <span class="material-symbols-outlined">bar_chart_4_bars</span>
+            Control de ingresos, egresos y cuotas de mantenimiento
+        </li>
+    </div>
+
+    <div>
+      <div class="summary-cards">
+        <div class="card">
+            <div class="card-content">
+                <div class="card-icon green">
+                    <span class="material-symbols-outlined">trending_up</span>
+                </div>
+                <div class="card-info">
+                    <h3>Ingresos del mes</h3>
+                    <div class="card-value">$45,000</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <div class="card-icon red">
+                    <span class="material-symbols-outlined">trending_down</span>
+                </div>
+
+                <div class="card-info">
+                    <h3>Egresos del mes</h3>
+                    <div class="card-value">$12,400</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <div class="card-icon blue">
+                    <span class="material-symbols-outlined">account_balance</span>
+                </div>
+                <div class="card-info">
+                    <h3>Fondo actual</h3>
+                    <div class="card-value">$128,600</div>
+                </div>
+            </div>
+        </div>
+     </div>
+    </div>
+
+      <div class="separator">
+        <div class="card-lg logs-card">
+          <div class="card-header">
+              <div class="header-title">
+                  <span class="header-line"></span>
+                  <span class="material-symbols-outlined">
+                      receipt_long
+                  </span>
+                  <div>
+                      <h3>Últimos Movimientos</h3>
+                      <small>Registro de ingresos y egresos recientes</small>
+                  </div>
+              </div>
+          </div>
+
+         <div class="card-body">
+            <div class="table-responsive">
+                <table class="aura-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Residente / Proveedor</th>
+                            <th>Tipo</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Hoy</td>
+                            <td>Cuota de mantenimiento</td>
+                            <td>Carlos Méndez (B-105)</td>
+
+                            <td>
+                                <span class="badge income">
+                                    Ingreso
+                                </span>
+                            </td>
+
+                            <td class="amount positive">
+                                +$1,500.00
+                            </td>
+
+                            <td>
+                                <span class="badge paid">
+                                    Pagado
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Ayer</td>
+                            <td>Mantenimiento de jardines</td>
+                            <td>Jardinería El Sol</td>
+
+                            <td>
+                                <span class="badge expense">
+                                    Egreso
+                                </span>
+                            </td>
+
+                            <td class="amount negative">
+                                -$3,200.00
+                            </td>
+
+                            <td>
+                                <span class="badge paid">
+                                    Pagado
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>15 Ene</td>
+                            <td>Reparación de portón</td>
+                            <td>Herrería Hnos.</td>
+
+                            <td>
+                                <span class="badge expense">
+                                    Egreso
+                                </span>
+                            </td>
+
+                            <td class="amount negative">
+                                -$8,500.00
+                            </td>
+
+                            <td>
+                                <span class="badge pending">
+                                    Pendiente
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>12 Ene</td>
+                            <td>Pago de vigilancia</td>
+                            <td>Seguridad Integral S.A.</td>
+
+                            <td>
+                                <span class="badge expense">
+                                    Egreso
+                                </span>
+                            </td>
+
+                            <td class="amount negative">
+                                -$18,500.00
+                            </td>
+                            <td>
+                                <span class="badge process">
+                                    En revisión
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+         </div>
+       </div>
+    </div>
+</div>

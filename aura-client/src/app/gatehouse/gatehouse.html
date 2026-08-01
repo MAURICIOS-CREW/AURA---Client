@@ -1,0 +1,130 @@
+<div class="dashboard-wrapper">
+
+<div class="dashboard-header">
+    <h2>Módulo de Caseta</h2>
+    <li><span class="material-symbols-outlined">speed_camera</span>Centro de control operativo para guardias de seguridad</li>
+</div>
+
+<div class="caseta-grid">
+  <div class="card-lg">
+    <div class="card-header">
+      <div class="header-title">
+        <span class="material-symbols-outlined">sprint</span>
+        <h3>Acceso Rápido</h3>
+      </div>
+    </div>
+    
+    <div class="card-body action-body">
+      <p class="card-desc">¿Necesitas crear un acceso ahora?</p>
+      <button class="btn-action vehicle">
+        <span class="material-symbols-outlined">directions_car</span> Entrada Vehicular
+      </button>
+      
+      <button class="btn-action pedestrian">
+        <span class="material-symbols-outlined">directions_walk</span> Entrada Peatonal
+      </button>
+      
+      <div class="divider"></div>
+      
+      <button class="btn-action alert">
+        <span class="material-symbols-outlined">warning</span> Reportar Incidencia
+      </button>
+    </div>
+  </div>
+
+  <!-- TARJETA 2: Bitácora de Logs de Aura -->
+  <div class="card-lg logs-card">
+    <div class="card-header">
+          <div class="header-title">
+              <span class="header-line"></span>
+              <span class="material-symbols-outlined">history_toggle_off</span>
+
+              <div>
+                  <h3>Bitácora de Logs de Aura</h3>
+                  <small>Registros de acciones del sistema</small>
+              </div>
+          </div>
+      </div>
+     <div class="card-body">
+       <div class="table-responsive">
+        <!-- <table class="aura-table">
+              <thead>
+                  <tr>
+                      <th>Residencia</th>
+                      <th>Identificador</th>
+                      <th>Código</th>
+                      <th>Estado</th>
+                      <th>Válido desde</th>
+                      <th>Válido hasta</th>
+                      <th>Uso</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>A-102</td>
+                      <td>Juan Pérez</td>
+                      <td>#AUR-8421</td>
+                      <td><span class="badge resident">Residente</span></td>
+                      <td>29 Jul 2026 - 08:00</td>
+                      <td>29 Jul 2026 - 22:00</td>
+                      <td><span class="usage">5</span></td>
+                  </tr>
+
+                  <tr>
+                      <td>B-305</td>
+                      <td>María López</td>
+                      <td>#VIS-1024</td>
+                      <td><span class="badge visit">Visita</span></td>
+                      <td>29 Jul 2026 - 10:00</td>
+                      <td>29 Jul 2026 - 14:00</td>
+                      <td><span class="usage">1</span></td>
+                  </tr>
+                  <tr>
+                      <td>A-102</td>
+                      <td>Juan Pérez</td>
+                      <td>#AUR-8421</td>
+                      <td><span class="badge resident">Residente</span></td>
+                      <td>29 Jul 2026 - 08:00</td>
+                      <td>29 Jul 2026 - 22:00</td>
+                      <td><span class="usage">5</span></td>
+                  </tr>
+
+                   <tr>
+                      <td>A-102</td>
+                      <td>Juan Pérez</td>
+                      <td>#AUR-8421</td>
+                      <td><span class="badge resident">Residente</span></td>
+                      <td>29 Jul 2026 - 08:00</td>
+                      <td>29 Jul 2026 - 22:00</td>
+                      <td><span class="usage">5</span></td>
+                  </tr>
+              </tbody>
+          </table> -->
+      </div>
+    </div>
+
+
+      <div class="gatehouse-container">
+          <h3>Alertas de Gatehouse (Android)</h3>
+
+          @if (notificaciones.length === 0) {
+            <p class="sin-datos">Esperando notificaciones en tiempo real desde Android...</p>
+          }
+
+          <!-- Renderizado de las notificaciones recibidas -->
+          <div class="lista-notificaciones">
+            @for (item of notificaciones; track $index) {
+              <div class="tarjeta-notificacion">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.body }}</p>
+                @if (item.timestamp) {
+                  <small>{{ item.timestamp }}</small>
+                }
+              </div>
+            }
+          </div>
+      </div>
+
+    </div>
+  </div>
+</div>

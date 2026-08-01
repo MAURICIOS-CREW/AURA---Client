@@ -1,0 +1,125 @@
+<div class="dashboard-wrapper">
+
+<div class="dashboard-header">
+    <h2>Módulo de Incidencias</h2>
+    <li><span class="material-symbols-outlined">report</span>Seguimiento de incidencias</li>
+</div>
+
+<div class="report-grid">
+  <div class="card-lg">
+    <div class="card-header">
+      <div class="header-title">
+        <span class="material-symbols-outlined">zone_person_alert</span>
+        <h3>Reporta una Incidencia</h3>
+      </div>
+    </div>
+    
+    <div class="card-body">
+    <form class="aura-form">
+        <div class="form-group">
+        <label for="id_usuario_report">Usuario que reporta</label>
+        <input
+            type="number"
+            id="id_usuario_report"
+            name="id_usuario_report"
+            placeholder="Ej. 1024">
+        </div>
+
+        <div class="form-group">
+        <label for="title">Título</label>
+        <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Título de la incidencia">
+        </div>
+
+        <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea
+            id="description"
+            name="description"
+            rows="4"
+            placeholder="¿Qué paso?..."></textarea>
+        </div>
+
+        <div class="form-group">
+        <label for="status">Estado</label>
+        <select id="status" name="status">
+            <option value="">Selecciona un estado</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="proceso">En proceso</option>
+            <option value="resuelto">Resuelto</option>
+        </select>
+        </div>
+
+        <button type="submit" class="btn-primary incident">
+        <span class="material-symbols-outlined">save</span>
+        Registrar incidencia
+        </button>
+    </form>
+    </div>
+
+  </div>
+
+  <!-- TARJETA 2: Bitácora de Logs de Aura -->
+  <div class="card-lg logs-card">
+    <div class="card-header">
+          <div class="header-title">
+              <span class="header-line"></span>
+             <span class="material-symbols-outlined">online_prediction</span>
+              <div>
+                  <h3>Bitácora de Incidencias</h3>
+                  <small>Estatus de las incidencias reportadas</small>
+              </div>
+          </div>
+      </div>
+   <div class="card-body">
+    <div class="table-responsive">
+        <table class="aura-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Reportado por</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>#001</td>
+                <td>Juan Pérez</td>
+                <td>Portón principal</td>
+                <td>No responde al control remoto.</td>
+                <td><span class="badge pending">Pendiente</span></td>
+            </tr>
+            <tr>
+                <td>#002</td>
+                <td>María López</td>
+                <td>Lámpara dañada</td>
+                <td>La luminaria del parque está apagada.</td>
+                <td><span class="badge process">En proceso</span></td>
+            </tr>
+            <tr>
+                <td>#003</td>
+                <td>Carlos Ramírez</td>
+                <td>Vehículo sospechoso</td>
+                <td>Automóvil sin identificación permaneció varias horas.</td>
+                <td><span class="badge resolved">Resuelto</span></td>
+            </tr>
+            <tr>
+                <td>#004</td>
+                <td>Ana Torres</td>
+                <td>Fuga de agua</td>
+                <td>Se detectó una fuga cerca del acceso norte.</td>
+                <td><span class="badge pending">Pendiente</span></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    </div>
+  </div>
+</div>
+</div>

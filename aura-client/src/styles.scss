@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Una fuente parecida a tu diseño */
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
