@@ -14,7 +14,7 @@
     </li>
 </div>
 
-<div class="vehicular-grid">
+<div class="pedestrian-grid">
   <div class="card-lg">
     <div class="card-header">
         <div class="header-title">
@@ -27,33 +27,44 @@
           </div>
 
           <div class="card-body">
-                <table class="aura-table">
+                <div class="table-responsive">
+                     <table class="aura-table">
                        <thead>
-      <tr>
-        <th>ID / Identificación</th>
-        <th>Nombre</th>
-        <th>Destino</th>
-        <th>Tipo</th>
-        <th>Fecha y Hora</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>INE-45829</td>
-        <td>Roberto Sánchez (Repartidor)</td>
-        <td>Casa C-203</td>
-        <td><span class="badge in">Entrada</span></td>
-        <td>Hoy, 11:20 AM</td>
-      </tr>
-      <tr>
-        <td>RES-1012</td>
-        <td>Laura Sánchez</td>
-        <td>Residente</td>
-        <td><span class="badge out">Salida</span></td>
-        <td>Hoy, 08:45 AM</td>
-      </tr>
-    </tbody>
-  </table>
-            </div>
+                          <tr>
+                            <th>Fecha y hora</th>
+                                <th>Acción</th>
+                                <th>Metodo</th>
+                                <th>Información</th>
+                                <th>Destino</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                           @if (isLoading()) {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        Cargando accesos vehiculares...
+                                    </td>
+                                </tr>
+                            } @else if (accessLogsList().length === 0) {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        No hay accesos vehiculares registrados.
+                                    </td>
+                                </tr>
+                            } @else {
+                                @for (item of accessLogsList(); track item.id) {
+                                    <tr>
+                                        <td> {{ item.timestamp | date:'dd MMM yyyy · HH:mm' }} </td>
+                                        <td> {{ item.access_type }} </td>
+                                        <td> {{ item.method }} </td>
+                                        <td> {{ item.message }} </td>
+                                        <td> {{ item.residence?.block }} </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                      </table>
+                </div>
+          </div>
     </div>
 </div>

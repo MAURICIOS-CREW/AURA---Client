@@ -5,9 +5,11 @@ import { Vehicular } from './vehicular/vehicular';
 import { Pedestrian } from './pedestrian/pedestrian';
 import { Finance } from './finance/finance';
 import { Gatehouse } from './gatehouse/gatehouse';
-import { Report } from './report/report';
+import { IncidentList } from './incident-list/incident-list';
 import { MainLayout } from './layouts/main-layout/main-layout';
 import { Login } from './auth/login/login';
+import { ListOfServices } from './list-of-services/list-of-services';
+import { Profile } from './profile/profile';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -21,7 +23,9 @@ export const routes: Routes = [
       { path: 'vehiculars', component: Vehicular },
       { path: 'finance', component: Finance },
       { path: 'gatehouse', component: Gatehouse },
-      { path: 'reports', component: Report },
+      { path: 'incidents-list', component: IncidentList },
+      { path: 'list-of-services', component: ListOfServices },
+      { path: 'profile', component: Profile },
     ]
   } 
 ]; 

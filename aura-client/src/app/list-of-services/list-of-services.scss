@@ -18,87 +18,140 @@ li {
 
 .dashboard-header {
   margin-bottom: 30px;
-  color: #333;
-}
-.dashboard-header h2 {
-  margin: 0 0 5px 0;
-  font-size: 1.8rem;
-  color: #2E6DB4; 
 }
 
-.dashboard-header p {
-  margin: 0;
-  color: #333;
-  font-size: 1rem;
-}
-
-.summary-cards {
-  display: grid;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 20px;
+  margin-bottom: 8px;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #2E6DB4;
+}
+
+.dashboard-header li {
+  color: #4b5563;
+  font-size: .95rem;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+.services-cards {
+  display: grid;
+  margin: 30px 0;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 30px;
 }
 
 .card {
   background: #ffffff;
   border-radius: 16px;
-  padding: 20px;
+  padding: 30px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform .25s ease, box-shadow .25s ease;
   border: 1px solid #f0f0f0;
+  height: 100%;
 }
+
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
 }
 
 .card-content {
   display: flex;
   align-items: flex-start;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 18px;
 }
 
 .card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 68px;
+  height: 68px;
+  min-width: 68px;
+  border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .card-icon span {
-  font-size: 28px;
+  font-size: 35px;
 }
-.blue { background: #e0f2fe; color: #0284c7; }
-.red { background: #fee2e2; color: #dc2626; }
-.green { background: #dcfce7; color: #16a34a; }
+
+.blue   { background: #e0f2fe; color: #0284c7; }
+.red    { background: #fee2e2; color: #dc2626; }
+.green  { background: #dcfce7; color: #16a34a; }
 .purple { background: #f3e8ff; color: #9333ea; }
 .orange { background: #ffedd5; color: #ea580c; }
+.yellow { background: #fef9c3; color: #ca8a04; }
+
+.card-info{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
 
 .card-info h3 {
   margin: 0;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #64748b;
-}
-.card-value {
-  font-size: 1.8rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #1e293b;
-  margin: 5px 0;
 }
-.card-trend {
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-.card-trend.positive { color: #10b981; }
-.card-trend.negative { color: #ef4444; }
 
+.card-description{
+  margin:12px 0;
+  color:#64748b;
+  font-size:.92rem;
+  line-height:1.5;
+  min-height:55px; 
+}
+
+.card-price{
+  font-size:1.3rem;
+  font-weight:500;
+  color:#429460;
+  margin-bottom:18px;
+}
+
+.service-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #2E6DB4;
+  color: white;
+  font-size: .90rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .25s ease;
+
+  & span {
+    font-size: 20px;
+    padding: 0px;
+  }
+}
+
+.service-btn:hover {
+  background: #0D2B52;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(37,99,235,.25);
+}
+
+.service-btn:active{
+  transform: scale(.98);
+}
 
 .table-responsive{
     width:100%;
@@ -210,13 +263,13 @@ li {
       width: 5px;
       height: 45px;
       border-radius: 20px;
-      background: #f08757;
+      background: #a588db;
     }
 
     .material-symbols-outlined {
       font-size: 34px;
-      color: #f08757;
-      background: #fdf2e9;
+      color: #a588db;
+      background: #ebe9e8;
       padding: 12px;
       border-radius: 14px;
     }
@@ -224,7 +277,7 @@ li {
     h3 {
       margin: 0;
       font-size: 1.15rem;
-      color: #f08757;
+      color: #a588db;
       font-weight: 700;
     }
 
@@ -254,25 +307,31 @@ li {
 
 }
 
-.badge{
-    &.income{
-        background:#dcfce7;
-        color:#15803d;
-    }
 
-    &.expense{
-        background:#fee2e2;
-        color:#dc2626;
-    }
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-    &.paid{
-        background:#dbeafe;
-        color:#195491;
-    }
+  padding: 10px 18px;
 
-    &.pending{
-        background:#fef3c7;
-        color:#b45309;
-    }
+  background: #2E6DB4;
+  color: #fff;
 
+  border: none;
+  border-radius: 10px;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: .25s;
+
+  &:hover {
+    background: #0D2B52;
+    transform: translateY(-2px);
+  }
+
+  span {
+    font-size: 20px;
+  }
 }

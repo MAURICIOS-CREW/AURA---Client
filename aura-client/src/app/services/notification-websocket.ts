@@ -16,7 +16,7 @@ export interface NotificationPayload {
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationWebsocketService {
+export class NotificationWebsocket {
   private socket$!: WebSocketSubject<NotificationPayload>;
   private notificationsSubject = new Subject<NotificationPayload>();
 

@@ -1,0 +1,114 @@
+<div class="profile-wrapper">
+
+<div class="profile-header">
+    <h2>Perfil del administrador</h2>
+    <li><span class="material-symbols-outlined">id_card</span>¡Hola Jardines del Edén!, gestiona tu identidad y credenciales.</li>
+</div>
+
+  <div class="report-grid">
+    
+    <div class="card-lg">
+      <div class="card-header">
+        <div class="header-title">
+          <span class="header-line"></span>
+          <span class="material-symbols-outlined">manage_accounts</span>
+          <div>
+            <h3>Datos Personales</h3>
+            <small>Actualiza la información visible en tu cuenta</small>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <form class="aura-form">
+          <div class="form-group">
+            <label for="name">Jardines del Edén </label>
+            <input type="text" value="Franccionamiento Residencial Jardines del Edén" disabled readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="username">Nombre de usuario</label>
+             <input type="text" value="JardinesEden" disabled readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value="residencial@eden.com"
+              disabled
+              readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value="•••••••••••"
+              disabled
+              readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Teléfono</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value="+52 33 1567 9862"
+              disabled
+              readonly>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <span class="material-symbols-outlined">save</span>
+            Guardar cambios
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TARJETA 2: Información de cuenta y seguridad (respetando la estructura de card-lg) -->
+    <div class="card-lg">
+      <div class="card-header">
+        <div class="header-title">
+          <span class="header-line"></span>
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+          <div>
+            <h3>Estado y Permisos</h3>
+            <small>Detalles de seguridad de tu sesión</small>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card-body">
+        <div class="aura-form">
+          <div class="form-group">
+            <label>Rol del sistema</label>
+            <input type="text" value="Super Administrador" disabled readonly>
+          </div>
+
+          <div class="form-group">
+            <label>Estado de la cuenta</label>
+            <input type="text" value="Activo / Verificado" disabled readonly>
+          </div>
+
+          <div class="form-group">
+            <label>Nivel de acceso</label>
+            <input type="text" value="Acceso Total (Root)" disabled readonly>
+          </div>
+
+          <div class="form-group">
+            <label>Última actividad</label>
+            <input type="text" value="Sesión activa ahora" disabled readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

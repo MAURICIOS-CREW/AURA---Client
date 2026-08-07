@@ -84,7 +84,7 @@ li {
    CONTENEDOR
 =========================== */
 
-.residents-grid {
+.pedestrian-grid {
   display: block;
 }
 
@@ -144,6 +144,15 @@ li {
 /* ===========================
    TABLA
 =========================== */
+.table-responsive{
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    border-radius:12px;
+    -webkit-overflow-scrolling:touch;
+}
+
 
 .aura-table {
   width: 100%;

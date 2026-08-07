@@ -36,7 +36,7 @@ li {
   margin: 0;
   font-size: 1.9rem;
   font-weight: 700;
-  color: #195491;
+  color: #2E6DB4;
 }
 
 .dashboard-header li {
@@ -56,18 +56,13 @@ li {
   display: flex;
   align-items: center;
   gap: 8px;
-
   padding: 10px 18px;
-
   background: #2E6DB4;
   color: #fff;
-
   border: none;
   border-radius: 10px;
-
   font-weight: 600;
   cursor: pointer;
-
   transition: .25s;
 
   &:hover {
@@ -84,7 +79,7 @@ li {
    CONTENEDOR
 =========================== */
 
-.residents-grid {
+.vehicular-grid {
   display: block;
 }
 
@@ -133,7 +128,7 @@ li {
     margin: 0;
     font-size: 1.15rem;
     font-weight: 700;
-    color: #195491;
+    color: #2E6DB4;
   }
 }
 
@@ -144,6 +139,14 @@ li {
 /* ===========================
    TABLA
 =========================== */
+.table-responsive{
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+
+    border-radius:12px;
+    -webkit-overflow-scrolling:touch;
+}
 
 .aura-table {
   width: 100%;
@@ -208,50 +211,7 @@ li {
   }
 }
 
-/* ===========================
-   CONTADOR
-=========================== */
-
-.usage {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
-
-  color: #333;
-
-  font-size: .85rem;
-  font-weight: 700;
-}
-
-/* ===========================
-   RESPONSIVE
-=========================== */
-
-@media (max-width: 768px) {
-  .dashboard-wrapper {
-    padding: 20px;
-    margin: 10px;
-  }
-  .header-top {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .btn-primary {
-    align-self: flex-end;
-  }
-  .card-body {
-    overflow-x: auto;
-  }
-  .aura-table {
-    min-width: 900px;
-  }
-
-}
-
-
- .card-header {
+.card-header {
     padding: 22px 28px;
     background: linear-gradient(180deg, #f8fbff, #ffffff);
     border-bottom: 1px solid #eef3f8;

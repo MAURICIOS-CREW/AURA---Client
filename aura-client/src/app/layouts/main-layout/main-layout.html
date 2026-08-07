@@ -1,12 +1,11 @@
 <div class="app-container">
   <!-- Barra de Navegación Lateral (Sidebar) -->
   <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
-
     <div class="brand">
       <img src="/logo_aura.png" alt="Logo de AURA" class="logo">
       <button class="toggle-btn" (click)="toggleSidebar()">
         <span class="material-symbols-outlined">
-          menu
+          menu_open
         </span>
       </button>
     </div>
@@ -36,8 +35,10 @@
             </li>
           </ul>
         </li>
-        <li routerLink="/reports" routerLinkActive="active">
+        <li routerLink="/incidents-list" routerLinkActive="active">
           <span class="material-symbols-outlined">description</span> Incidencias</li>
+        <li routerLink="/list-of-services" routerLinkActive="active">
+          <span class="material-symbols-outlined">list</span> Lista de Servicios</li>
         <li routerLink="/finance" routerLinkActive="active">
           <span class="material-symbols-outlined">payments</span> Finanzas</li>
      </ul>
@@ -47,13 +48,12 @@
  <main class="main-content">
     <header class="topbar">
       <div class="topbar-spacer"></div> 
-      
       <div class="user-menu">
-        <div class="user-profile">
+        <div class="user-profile" routerLink="/profile" routerLinkActive="active">
           <span class="material-symbols-outlined">account_circle</span>
           <span class="user-name">Administrador</span>
         </div>
-        <button class="btn-logout">
+        <button class="btn-logout" routerLink="/login" routerLinkActive="active">
           <span class="material-symbols-outlined">logout</span>
           Salir
         </button>

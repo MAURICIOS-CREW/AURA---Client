@@ -79,43 +79,32 @@
         <table class="aura-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Reportado por</th>
-                <th>Título</th>
+                <th>Fecha</th>
+                <th>Título del Reporte</th>
                 <th>Descripción</th>
                 <th>Estado</th>
             </tr>
         </thead>
 
         <tbody>
-            <tr>
-                <td>#001</td>
-                <td>Juan Pérez</td>
-                <td>Portón principal</td>
-                <td>No responde al control remoto.</td>
-                <td><span class="badge pending">Pendiente</span></td>
-            </tr>
-            <tr>
-                <td>#002</td>
-                <td>María López</td>
-                <td>Lámpara dañada</td>
-                <td>La luminaria del parque está apagada.</td>
-                <td><span class="badge process">En proceso</span></td>
-            </tr>
-            <tr>
-                <td>#003</td>
-                <td>Carlos Ramírez</td>
-                <td>Vehículo sospechoso</td>
-                <td>Automóvil sin identificación permaneció varias horas.</td>
-                <td><span class="badge resolved">Resuelto</span></td>
-            </tr>
-            <tr>
-                <td>#004</td>
-                <td>Ana Torres</td>
-                <td>Fuga de agua</td>
-                <td>Se detectó una fuga cerca del acceso norte.</td>
-                <td><span class="badge pending">Pendiente</span></td>
-            </tr>
+            @if (isLoading()) {
+                            <tr>
+                            <td colspan="6" class="text-center py-4">Cargando Incidencias...</td>
+                            </tr>
+                        } @else if (incidentsList().length === 0) {
+                            <tr>
+                            <td colspan="6" class="text-center py-4">No hay incidencias registradas.</td>
+                            </tr>
+                        } @else {
+                            @for (item of incidentsList(); track item.id) {
+                            <tr>
+                                <td>{{ item.created_at | date:'dd MMM' }}</td>
+                                <td>{{ item.title || 'Servicio General' }}</td>
+                                <td>{{ item.description || 'Sin descripción' }}</td>
+                                <td>{{ item.status || 'Pendiente' }}</td>
+                            </tr>
+                            }
+                        }
         </tbody>
     </table>
     </div>

@@ -6,7 +6,6 @@
   </div>
 
   <div class="summary-cards">
-    
     <div class="card">
       <div class="card-content">
         <div class="card-icon blue">
@@ -71,21 +70,66 @@
       </button>
     </div>
 
-    <div class="card">
-      <div class="card-content">
-        <div class="card-icon orange">
-          <span class="material-symbols-outlined">account_balance_wallet</span>
+  </div>
+
+    <div class="allaccess-grid">
+        <div class="card-lg">
+            <div class="card-header">
+                <div class="header-title">
+                        <span class="material-symbols-outlined">Warning</span>
+                        <div>
+                            <h3>Bitacora general de Accesos</h3>
+                            <small>Todos los accesos registrados</small>
+                        </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="aura-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha y hora</th>
+                                <th>Acción</th>
+                                <th>Metodo</th>
+                                <th>Información</th>
+                                <th>Destino</th>
+                                <th>Placa</th>
+                                <th>Marca</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (isLoading()) {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        Cargando accesos vehiculares...
+                                    </td>
+                                </tr>
+                            } @else if (accessLogsList().length === 0) {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        No hay accesos vehiculares registrados.
+                                    </td>
+                                </tr>
+                            } @else {
+                                @for (item of accessLogsList(); track item.id) {
+                                    <tr>
+                                        <td> {{ item.timestamp | date:'dd MMM yyyy · HH:mm' }} </td>
+                                        <td> {{ item.access_type }} </td>
+                                        <td> {{ item.method }} </td>
+                                        <td> {{ item.message }} </td>
+                                        <td> {{ item.residence?.block }} </td>
+                                        <td> {{ item.vehicle?.plate || 'N/A' }} </td>
+                                        <td> {{ item.vehicle?.brand || 'N/A' }} </td>
+                                        <td> {{ item.vehicle?.color || 'N/A' }} </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>  
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="card-info">
-          <h3>Ingresos del mes</h3>
-          <div class="card-value">$45k</div>
-          <div class="card-trend positive">+12% vs mes pasado</div>
-        </div>
-      </div>
-      <button class="btn-report">
-        <span class="material-symbols-outlined">description</span> Generar reporte
-      </button>
     </div>
 
-  </div>
 </div>

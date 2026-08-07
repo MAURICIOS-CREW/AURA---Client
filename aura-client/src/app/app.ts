@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NotificationWebsocketService, NotificationPayload } from './services/notification-websocket';
+import { NotificationPayload, NotificationWebsocket } from './services/notification-websocket';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +21,7 @@ export class App implements OnInit, OnDestroy {
   private sub!: Subscription;
 
   // Inyección de dependencias moderna con inject()
-  private wsService = inject(NotificationWebsocketService);
+  private wsService = inject(NotificationWebsocket);
 
   ngOnInit(): void {
     // 1. Iniciar conexión WebSocket con aura-back

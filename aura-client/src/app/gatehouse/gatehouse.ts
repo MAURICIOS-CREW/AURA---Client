@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Necesario si usas *ngFor o *ngIf
 import { Subscription } from 'rxjs';
-import { NotificationWebsocketService, NotificationPayload } from '../services/notification-websocket';
+import { NotificationWebsocket, NotificationPayload } from '../services/notification-websocket';
 
 @Component({
   selector: 'app-gatehouse',
@@ -15,7 +15,7 @@ export class Gatehouse implements OnInit, OnDestroy {
   public notificaciones: NotificationPayload[] = [];
   
   private sub!: Subscription;
-  private wsService = inject(NotificationWebsocketService);
+  private wsService = inject(NotificationWebsocket);
 
   ngOnInit(): void {
     // Escuchamos el stream que ya inició app.ts
