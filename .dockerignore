@@ -1,0 +1,9 @@
+.git
+.gitignore
+.vscode
+.idea
+dist
+.angular
+tmp
+coverage
+npm-debug.log*

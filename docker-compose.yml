@@ -1,0 +1,21 @@
+name: aura-client
+
+services:
+  aura-client:
+    container_name: aura-client-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    ports:
+      - "4200:4200"
+    volumes:
+      # Mapear el directorio actual para sincronización en tiempo real y soporte completo de VS Code Linter en el host
+      - .:/app
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NG_CLI_ANALYTICS=false
+    stdin_open: true
+    tty: true

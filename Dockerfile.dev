@@ -1,0 +1,24 @@
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Copiar archivos de definición de dependencias
+COPY package.json package-lock.json ./
+
+# Instalar dependencias durante el build de la imagen
+RUN npm install
+
+# Copiar el script de entrada
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Copiar el resto del código fuente del cliente
+COPY . .
+
+# Exponer puerto 4200 para el servidor de desarrollo de Angular
+EXPOSE 4200
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+# Comando por defecto para arrancar Angular Dev Server escuchando en 0.0.0.0
+CMD ["npm", "run", "start", "--", "--host", "0.0.0.0", "--poll", "1000"]
