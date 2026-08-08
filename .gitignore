@@ -42,3 +42,12 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment files (templates are tracked, real env files are ignored)
+src/environments/environment.ts
+src/environments/environment.prod.ts
+src/environments/environment.*.ts
+!src/environments/*.example.ts
+*.env
+
+

@@ -4,20 +4,44 @@ Este es el cliente frontend de **Aura**, desarrollado con **Angular 21** y **Nod
 
 ---
 
-## 🚀 Entorno de Desarrollo con Docker
+## Entorno de Desarrollo con Docker
 
 El proyecto está preparado para ejecutarse completamente en un entorno de desarrollo aislado utilizando Docker y Docker Compose.
 
-### 📋 Características de la Configuración Docker
+### Características de la Configuración Docker
 * **Live Reload (HMR)**: Los cambios en el código fuente se reflejan automáticamente en el navegador (`http://localhost:4200`).
 * **Sincronización con VS Code**: El directorio `node_modules` y los archivos fuente están mapeados entre el contenedor y tu equipo local. Esto garantiza que autocompletado, TypeScript, Prettier y Angular Language Service funcionen en VS Code sin errores de dependencias o sub-rayados rojos.
 * **Resiliencia (`restart: on-failure`)**: El contenedor **NO** se inicia automáticamente cuando enciendes la computadora o reinicias Docker, pero **SÍ** se reinicia automáticamente si ocurre un error inesperado durante el desarrollo.
 
 ---
 
-## ⚙️ Instrucciones de Inicio
+## Configuración de Entornos y Seguridad en Git
 
-### 🐧 Linux / macOS
+Para evitar hardcodear URLs y proteger datos sensibles o configuraciones locales:
+
+### 1. Plantillas de Entorno (`*.example.ts`)
+El proyecto incluye dos plantillas versionadas en Git:
+* `src/environments/environment.example.ts`: Plantilla para desarrollo local.
+* `src/environments/environment.prod.example.ts`: Plantilla para compilación de producción.
+
+### 2. Configurar archivos locales de entorno
+Copia las plantillas para crear tus archivos de entorno activos:
+```bash
+cp src/environments/environment.example.ts src/environments/environment.ts
+cp src/environments/environment.prod.example.ts src/environments/environment.prod.ts
+```
+
+> [!IMPORTANT]
+> **Seguridad en Git:** Los archivos reales `environment.ts` y `environment.prod.ts` están listados en `.gitignore`. **NUNCA** elimines estas reglas de `.gitignore` ni subas credenciales, hosts privados o tokens al repositorio de Git.
+
+### 3. Sustitución Automática en el Build de Producción
+Al ejecutar la compilación de producción (`npm run build` o `npx ng build`), Angular CLI sustituirá en automático `environment.ts` por `environment.prod.ts` mediante la regla `fileReplacements` definida en `angular.json`.
+
+---
+
+## Instrucciones de Inicio
+
+### Linux / macOS
 
 1. **Navegar a la carpeta `Client`**:
    ```bash
@@ -42,7 +66,7 @@ El proyecto está preparado para ejecutarse completamente en un entorno de desar
 
 ---
 
-### 🪟 Windows (WSL2 / PowerShell / CMD)
+### Windows (WSL2 / PowerShell / CMD)
 
 1. **Abre PowerShell, CMD o tu terminal de WSL2** y navega hasta la carpeta `Client`:
    ```powershell
@@ -66,7 +90,7 @@ El proyecto está preparado para ejecutarse completamente en un entorno de desar
 
 ---
 
-## 🛠️ Comandos Útiles
+## Comandos Útiles
 
 | Acción | Comando Docker Compose | Script npm (en host) |
 | :--- | :--- | :--- |

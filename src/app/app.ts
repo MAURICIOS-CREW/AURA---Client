@@ -26,7 +26,7 @@ export class App implements OnInit, OnDestroy {
   ngOnInit(): void {
     // 1. Iniciar conexión WebSocket con aura-back
     // Sustituye con tu IP o URL real (ejemplo: ws://localhost:3000 o ws://192.168.1.50:3000)
-    this.wsService.connect('ws://localhost:3000');
+    this.wsService.connect();
 
     // 2. Suscribirse a las notificaciones que lleguen desde Android
     this.sub = this.wsService.notifications$.subscribe({

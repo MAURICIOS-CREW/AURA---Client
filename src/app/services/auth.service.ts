@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { LoginResponse } from '../models/auth.model';
 
 @Injectable({
@@ -10,7 +11,7 @@ export class AuthService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost/api/admin/auth/login';
+  private apiUrl = `${environment.apiUrl}/admin/auth/login`;
 
   login(login: string, password: string): Observable<LoginResponse> {
 

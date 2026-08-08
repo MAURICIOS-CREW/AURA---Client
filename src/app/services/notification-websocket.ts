@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Observable, Subject, EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 // Importante: La palabra 'export' aquí resuelve el error de importación en app.ts
 export interface NotificationPayload {
@@ -29,7 +30,7 @@ export class NotificationWebsocket {
    * Conecta con el servidor WebSocket (aura-back)
    * @param wsUrl Dirección URL de tu backend (ej. ws://localhost:3000/ws)
    */
-  public connect(wsUrl: string = 'ws://localhost:3000'): void {
+  public connect(wsUrl: string = environment.wsUrl): void {
     if (!this.socket$ || this.socket$.closed) {
       this.socket$ = webSocket<NotificationPayload>({
         url: wsUrl,

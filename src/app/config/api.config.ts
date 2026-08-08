@@ -1,4 +1,6 @@
+import { environment } from '../../environments/environment';
+
 export const API_CONFIG = {
-  baseUrl: 'http://localhost:8000',
-  adminApi: 'http://localhost:8000/api/admin'
+  baseUrl: environment.apiUrl,
+  adminApi: `${environment.apiUrl}/admin`
 };

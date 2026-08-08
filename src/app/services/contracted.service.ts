@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface ContractedServiceItem {
   id: number;
@@ -48,7 +49,7 @@ export class ContractedService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost/api/admin/contracted-services';
+  private apiUrl = `${environment.apiUrl}/admin/contracted-services`;
 
   getContractedServices(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.apiUrl);
