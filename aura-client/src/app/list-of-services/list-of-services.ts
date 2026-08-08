@@ -14,36 +14,76 @@ export class ListOfServices implements OnInit {
   private contractedService = inject(ContractedService);
 
   servicesList = signal<ContractedServiceItem[]>([]);
-  isLoading = signal<boolean>(true);
+  isLoading = signal(true);
 
   ngOnInit(): void {
     this.fetchServices();
   }
 
-fetchServices(): void {
-  this.contractedService.getContractedServices().subscribe({
+  fetchServices(): void {
+    this.contractedService.getContractedServices().subscribe({
+      next: (response) => {
+        console.log(response);
+        console.log(response.data);
 
-    next: (response) => {
-      console.log(response);       
-      console.log(response.data);
-      this.servicesList.set(response.data);
-      this.isLoading.set(false);
-    },
+        console.log(
+          'ESTADOS:',
+          response.data.map(item => item.financial_charge?.status)
+        );
 
-    error: (err) => {
-      console.error('Error al cargar la lista de servicios:', err);
-      this.isLoading.set(false);
-    }
+        this.servicesList.set(response.data);
+        this.isLoading.set(false);
+      },
 
-  });
-}
-  // Método auxiliar para asignar la clase CSS del estado
-  getStatusClass(status: string): string {
-    switch (status?.toUpperCase()) {
-      case 'PAGADO': return 'badge-success';
-      case 'PENDIENTE': return 'badge-warning';
-      case 'EN REVISIÓN': return 'badge-info';
-      default: return 'badge-secondary';
-    }
+      error: (err) => {
+        console.error('Error al cargar la lista de servicios:', err);
+        this.isLoading.set(false);
+      }
+    });
   }
+
+getStatusClass(status: string): string {
+  switch (status?.toLowerCase()) {
+    case 'paid':
+      return 'badge-paid';
+
+    case 'pending':
+      return 'badge-pending';
+
+    case 'in_progress':
+      return 'badge-in-progress';
+
+    case 'refunded':
+      return 'badge-refunded';
+
+    case 'cancelled':
+      return 'badge-cancelled';
+
+    default:
+      return 'badge-unknown';
+  }
+}
+
+getStatusLabel(status: string): string {
+  switch (status?.toLowerCase()) {
+    case 'paid':
+      return 'Pagado';
+
+    case 'pending':
+      return 'Pendiente';
+
+    case 'in_progress':
+      return 'En progreso';open
+
+    case 'refunded':
+      return 'Reembolsado';
+
+    case 'cancelled':
+      return 'Cancelado';
+
+    default:
+      return 'Sin estado';
+  }
+}
+
 }

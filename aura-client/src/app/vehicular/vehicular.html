@@ -57,10 +57,19 @@
                                 @for (item of accessLogsList(); track item.id) {
                                     <tr>
                                         <td> {{ item.timestamp | date:'dd MMM yyyy · HH:mm' }} </td>
-                                        <td> {{ item.access_type }} </td>
-                                        <td> {{ item.method }} </td>
+                                        <td>
+                                            <span [class]="'badge ' + getAccessTypeClass(item.access_type || '')">
+                                                {{ getAccessTypeLabel(item.access_type || '') }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span [class]="'badge ' + getMethodClass(item.method || '')">
+                                                {{ getMethodLabel(item.method || '') }}
+                                            </span>
+                                        </td>
                                         <td> {{ item.message }} </td>
-                                        <td> {{ item.residence?.block }} </td>
+                                          <td>  {{ item.residence?.address?.name || 'Sin dirección' }},
+                                                CP {{ item.residence?.address?.cp || 'N/A' }} </td>
                                         <td> {{ item.vehicle?.plate || 'N/A' }} </td>
                                         <td> {{ item.vehicle?.brand || 'N/A' }} </td>
                                         <td> {{ item.vehicle?.color || 'N/A' }} </td>

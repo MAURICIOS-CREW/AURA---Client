@@ -33,15 +33,37 @@ export class IncidentList  {
     });
   }
   
-    getStatusClass(status: string): string {
+getStatusClass(status: string): string {
     switch (status?.toUpperCase()) {
-      case 'OPEN': return 'badge-success';
-      case 'IN_PROGRESS': return 'badge-warning';
-      case 'ATTENDED': return 'badge-info';
-      case 'VIEWED': return 'badge-info';
-      case 'CANCELLED': return 'badge-danger';
-      default: return 'badge-secondary';
+      case 'OPEN': return 'badge-open';
+      case 'IN_PROGRESS': return 'badge-in_progress';
+      case 'ATTENDED': return 'badge-attended';
+      case 'VIEWED': return 'badge-viewed';
+      case 'CANCELLED': return 'badge-cancelled';
+      default: return 'badge-unknown';
     }
+}
+
+getStatusLabel(status: string): string {
+  switch (status?.toLowerCase()) {
+    case 'open':
+      return 'Abierto';
+
+    case 'in_progress':
+      return 'En progreso';
+
+    case 'attended':
+      return 'Atendido';
+
+    case 'viewed':
+      return 'Visto'; 
+
+    case 'cancelled':
+      return 'Cancelado';
+
+    default:
+      return 'Sin estado';
   }
+}
 
 }

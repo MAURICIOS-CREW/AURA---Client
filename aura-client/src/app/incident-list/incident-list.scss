@@ -261,33 +261,39 @@ li {
     display:inline-flex;
     align-items:center;
     justify-content:center;
-
     padding:6px 12px;
-
     border-radius:20px;
-
     font-size:.75rem;
     font-weight:700;
-
     text-transform:uppercase;
     letter-spacing:.5px;
+}
 
-    &.pending{
-        background:#fef3c7;
-        color:#f0a857;
-    }
+.badge-in_progress{
+    background:#fef3c7;
+    color:#e0bb40;
+}
 
-    &.process{
-        background:#dbeafe;
-        color:#2E6DB4;
-    }
+.badge-open{
+        background-color: #cfe2ff;
+        color: #084298;
+}
 
-    &.resolved{
+.badge-attended{
         background:#dcfce7;
         color:#15803d;
-    }
-
 }
+    
+.badge-viewed{
+        background:#dbeafe;
+        color:#4c5c6e;
+}
+    
+.badge-cancelled{
+        background-color: #f8d7da;
+        color: #842029;
+}
+
 
 /* ===========================
    CONTADOR DE USOS

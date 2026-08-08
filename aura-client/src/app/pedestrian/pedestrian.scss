@@ -196,26 +196,41 @@ li {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-
   padding: 6px 12px;
-
   border-radius: 20px;
-
   font-size: .75rem;
   font-weight: 700;
   letter-spacing: .5px;
   text-transform: uppercase;
 
-  &.resident {
-    background: #e0f2fe;
-    color: #2E6DB4;
-  }
-
-  &.visit {
-    background: #fef3c7;
-    color: #b45309;
-  }
 }
+
+.badge-qr{
+  background: #f3e8ff; 
+  color: #9333ea;;
+
+}
+
+.badge-plate{
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
+.badge-unknown{
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.badge-scan{
+  background:#dcfce7;
+  color:#15803d;
+}
+
+.badge-manual{
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
 
 /* ===========================
    CONTADOR

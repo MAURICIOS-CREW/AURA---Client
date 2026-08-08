@@ -20,7 +20,7 @@ export class Vehicular implements OnInit {
     this.fetchAccessLogs();
   }
 
-  fetchAccessLogs(): void {
+fetchAccessLogs(): void {
      this.accessLogService
       .getAccessLogs('vehicle')
       .subscribe({
@@ -45,6 +45,57 @@ export class Vehicular implements OnInit {
       });
 
   }
+  
+getAccessTypeClass(access_type: string): string {
+  switch (access_type?.toLowerCase()) {
+    case 'qr':
+      return 'badge-qr';
 
+    case 'plate':
+      return 'badge-plate';
+
+    default:
+      return 'badge-unknown';
+  }
+}
+
+getAccessTypeLabel(access_type: string): string {
+  switch (access_type?.toLowerCase()) {
+    case 'qr':
+      return 'Por QR';open
+
+    case 'plate':
+      return 'Por PLACA';
+
+    default:
+      return 'Sin estado';
+  }
+}
+
+getMethodClass(method: string): string {
+  switch (method?.toLowerCase()) {
+    case 'scan':
+      return 'badge-scan';
+
+    case 'manual':
+      return 'badge-manual';
+
+    default:
+      return 'badge-unknown';
+  }
+}
+
+getMethodLabel(method: string): string {
+  switch (method?.toLowerCase()) {
+    case 'scan':
+      return 'Escaner';
+
+    case 'manual':
+      return 'Manual';
+
+    default:
+      return 'Desconocido';
+  }
+}
 
 }

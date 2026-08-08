@@ -25,7 +25,7 @@
             <div class="card-info">
                 <h3>Mantenimiento Mensual</h3>
                 <p class="card-description">
-                    Servicios generales de mantenimiento preventivo y correctivo del residencial.
+                    Servicios generales de mantenimiento preventivo y correctivo del residencial (Áreas Comunes).
                 </p>
 
                 <div class="card-price">$200 MXN</div>
@@ -37,17 +37,17 @@
         </div>
     </div>
 
-    <!-- Diagnóstico de electricista -->
+    <!-- Lavado de Alfombras y Muebles -->
     <div class="card">
         <div class="card-content">
-            <div class="card-icon yellow">
-                <span class="material-symbols-outlined">electrical_services</span>
+            <div class="card-icon purple">
+                <span class="material-symbols-outlined">cleaning</span>
             </div>
 
             <div class="card-info">
-                <h3>Diagnóstico de electricista</h3>
+                <h3>Lavado de Alfombras y Muebles</h3>
                 <p class="card-description">
-                    Inspección del sistema eléctrico, contactos, apagadores y cableado.
+                    Limpieza a vapor con inyección y succión profunda para eliminación de manchas y ácaros.
                 </p>
 
                 <div class="card-price">$250 MXN</div>
@@ -62,14 +62,14 @@
 
     <div class="card">
         <div class="card-content">
-            <div class="card-icon green">
-                <span class="material-symbols-outlined">household_supplies</span>
+            <div class="card-icon yellow">
+                <span class="material-symbols-outlined">propane</span>
             </div>
 
             <div class="card-info">
-                <h3>Servicio de Limpieza</h3>
+                <h3>Limpieza Profunda de Cisterna y Aljibe</h3>
                 <p class="card-description">
-                    Aseo general y trabajos de higiene para tu hogar.
+                    Vaciado, cepillado de paredes, desinfección con cloro de grado alimenticio y extracción de lodos.
                 </p>
 
                 <div class="card-price">Desde $500 MXN</div>
@@ -85,17 +85,17 @@
     <!-- Jardinería -->
     <div class="card">
         <div class="card-content">
-            <div class="card-icon red">
+            <div class="card-icon green">
                 <span class="material-symbols-outlined">home_and_garden</span>
             </div>
 
             <div class="card-info">
-                <h3>Jardinería para el hogar</h3>
+                <h3>Jardinería y Poda de Césped</h3>
                 <p class="card-description">
-                    Mantenimiento, poda, limpieza y cuidado de jardines principales y patios particulares.
+                    Servicio completo de corte de pasto, nivelación de jardín, corte de maleza y retiro de residuos verdes.
                 </p>
 
-                <div class="card-price">$350 MXN</div>
+                <div class="card-price">$250 MXN</div>
 
                 <button class="service-btn">
                     <span class="material-symbols-outlined">handshake</span>
@@ -105,20 +105,19 @@
         </div>
     </div>
 
-    <!-- Impermeabilización -->
+    <!-- Aire Acondicionado -->
     <div class="card">
         <div class="card-content">
-            <div class="card-icon green">
-                <span class="material-symbols-outlined">water_damage</span>
+            <div class="card-icon blue">
+                <span class="material-symbols-outlined">ac_unit</span>
             </div>
 
             <div class="card-info">
-                <h3>Impermeabilización</h3>
+                <h3>Mantenimiento de Aire Acondicionado</h3>
                 <p class="card-description">
-                    Protección de techos y superficies contra filtraciones y humedad
-                    (precio estimado estandar superficie 4 x 12 m2).
+                   Revisión general, limpieza de filtros, desinfección de serpentín y recarga de gas refrigerante.
                 </p>
-                <div class="card-price">$6960 MXN</div>
+                <div class="card-price">$450 MXN</div>
 
                 <button class="service-btn">
                     <span class="material-symbols-outlined">handshake</span>
@@ -128,7 +127,7 @@
         </div>
     </div>
 
-    <!-- Diagnóstico de pintura -->
+    <!-- Pintura y Retoque de Fachada -->
     <div class="card">
         <div class="card-content">
             <div class="card-icon red">
@@ -136,13 +135,11 @@
             </div>
 
             <div class="card-info">
-                <h3>Diagnóstico de pintura para el hogar</h3>
+                <h3>Pintura y Retoque de Fachada</h3>
                 <p class="card-description">
-                    Evaluación del estado de pintura interior y exterior del inmueble.
+                    Resane de grietas superficiales y aplicación de pintura vinílica impermeabilizante exterior.
                 </p>
-
-                <div class="card-price">$250 MXN</div>
-
+                <div class="card-price">$1200 MXN</div>
                 <button class="service-btn">
                     <span class="material-symbols-outlined">handshake</span>
                     Contratar servicio
@@ -151,7 +148,7 @@
         </div>
     </div>
 
-    <!-- Diagnóstico de fontanería -->
+    <!-- Plomería y Reparación de Fugas -->
     <div class="card">
         <div class="card-content">
             <div class="card-icon blue">
@@ -159,13 +156,11 @@
             </div>
 
             <div class="card-info">
-                <h3>Diagnóstico de fontanería</h3>
+                <h3>Plomería y Reparación de Fugas</h3>
                 <p class="card-description">
-                    Revisión de fugas, tuberías, conexiones y sistemas hidráulicos.
+                    Servicio técnico especializado para reparación de tuberías, cambio de llaves, sanitarios y tinacos.
                 </p>
-
-                <div class="card-price">$250 MXN</div>
-
+                <div class="card-price">$300 MXN</div>
                 <button class="service-btn">
                     <span class="material-symbols-outlined">handshake</span>
                     Contratar servicio
@@ -222,12 +217,13 @@
                                 <td>{{ item.user?.name || 'N/A' }}</td>
                                 <td>{{ item.service?.title || 'Servicio General' }}</td>
                                 <td>
-                                {{ item.residence?.address?.street }} {{ item.residence?.address?.number }}
+                                    {{ item.residence?.address?.name || 'Sin dirección' }},
+                                    CP {{ item.residence?.address?.cp || 'N/A' }}
                                 </td>
                                 <td>{{ item.financial_charge?.amount | currency:'MXN':'symbol':'1.2-2' }}</td>
                                 <td>
                                 <span [class]="'badge ' + getStatusClass(item.financial_charge?.status || '')">
-                                    {{ item.financial_charge?.status || 'SIN ESTADO' }}
+                                    {{ getStatusLabel(item.financial_charge?.status || '') }}
                                 </span>
                                 </td>
                             </tr>

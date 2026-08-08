@@ -79,7 +79,7 @@
         <table class="aura-table">
         <thead>
             <tr>
-                <th>Fecha</th>
+                <th>Fecha y hora</th>
                 <th>Título del Reporte</th>
                 <th>Descripción</th>
                 <th>Estado</th>
@@ -98,10 +98,12 @@
                         } @else {
                             @for (item of incidentsList(); track item.id) {
                             <tr>
-                                <td>{{ item.created_at | date:'dd MMM' }}</td>
+                                <td>{{ item.created_at | date:'dd MMM yyyy · HH:mm' }}</td>
                                 <td>{{ item.title || 'Servicio General' }}</td>
                                 <td>{{ item.description || 'Sin descripción' }}</td>
-                                <td>{{ item.status || 'Pendiente' }}</td>
+                                <td> <span [class]="'badge ' + getStatusClass(item.status || '')">
+                                    {{ getStatusLabel(item.status || '') }}
+                                </span></td>
                             </tr>
                             }
                         }

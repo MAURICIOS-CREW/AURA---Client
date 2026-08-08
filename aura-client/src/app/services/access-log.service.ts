@@ -20,9 +20,21 @@ export interface AccessLog {
         color: string;
     };
 
-    residence?: {
-        block: string;
+  residence?: {
+    id: number;
+    address_id: number;
+    block: string;
+    number: string;
+    interior_number?: string | null;
+
+    address?: {
+      id: number;
+      name: string;
+      cp: string;
+      created_at: string;
+      updated_at: string;
     };
+  };
 }
 
 export interface ApiResponse {

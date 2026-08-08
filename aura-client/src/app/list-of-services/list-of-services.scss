@@ -187,50 +187,48 @@ li {
   }
 }
 
-.badge{
-
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:.75rem;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-
-    &.income{
-        background:#dcfce7;
-        color:#15803d;
-
-    }
-
-    &.expense{
-        background:#fee2e2;
-        color:#dc2626;
-
-    }
-
-    &.paid{
-        background:#dbeafe;
-        color:#195491;
-
-    }
-
-    &.pending{
-        background:#fef3c7;
-        color:#b45309;
-
-    }
-
-    &.process{
-        background:#ede9fe;
-        color:#6d28d9;
-
-    }
-
+//  badge styles
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
 }
 
+.badge-paid {
+  background:#dcfce7;
+  color:#15803d;
+}
+
+.badge-pending {
+  background:#fef3c7;
+  color:#e0bb40;
+}
+
+.badge-in-progress {
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
+.badge-refunded {
+  background-color: #ffde9d;
+  color: #f07b1b;
+}
+
+.badge-cancelled {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+.badge-unknown {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+//Card 
 .card-lg {
   background: #fff;
   border-radius: 18px;
