@@ -1,130 +1,403 @@
 <div class="dashboard-wrapper">
 
-<div class="dashboard-header">
-    <h2>Módulo de Caseta</h2>
-    <li><span class="material-symbols-outlined">speed_camera</span>Centro de control operativo para guardias de seguridad</li>
-</div>
-
-<div class="caseta-grid">
-  <div class="card-lg">
-    <div class="card-header">
-      <div class="header-title">
-        <span class="material-symbols-outlined">sprint</span>
-        <h3>Acceso Rápido</h3>
+  <div class="dashboard-header">
+    <div class="header-main">
+      <h2>Módulo de Caseta</h2>
+      <div class="connection-status-badge" [ngClass]="connectionState">
+        <span class="status-dot"></span>
+        <span class="status-text">
+          @if (connectionState === 'connected') { Socket En Vivo }
+          @else if (connectionState === 'connecting' || connectionState === 'reconnecting') { Reconectando... }
+          @else { Desconectado }
+        </span>
       </div>
     </div>
-    
-    <div class="card-body action-body">
-      <p class="card-desc">¿Necesitas crear un acceso ahora?</p>
-      <button class="btn-action vehicle">
-        <span class="material-symbols-outlined">directions_car</span> Entrada Vehicular
-      </button>
-      
-      <button class="btn-action pedestrian">
-        <span class="material-symbols-outlined">directions_walk</span> Entrada Peatonal
-      </button>
-      
-      <div class="divider"></div>
-      
-      <button class="btn-action alert">
-        <span class="material-symbols-outlined">warning</span> Reportar Incidencia
-      </button>
-    </div>
+    <li>
+      <span class="material-symbols-outlined">speed_camera</span>
+      Centro de control operativo para guardias de seguridad
+    </li>
   </div>
 
-  <!-- TARJETA 2: Bitácora de Logs de Aura -->
-  <div class="card-lg logs-card">
-    <div class="card-header">
-          <div class="header-title">
-              <span class="header-line"></span>
-              <span class="material-symbols-outlined">history_toggle_off</span>
-
-              <div>
-                  <h3>Bitácora de Logs de Aura</h3>
-                  <small>Registros de acciones del sistema</small>
-              </div>
-          </div>
+  <div class="caseta-grid">
+    <!-- ACCESO RÁPIDO -->
+    <div class="card-lg">
+      <div class="card-header">
+        <div class="header-title">
+          <span class="material-symbols-outlined">sprint</span>
+          <h3>Acceso Rápido</h3>
+        </div>
       </div>
-     <div class="card-body">
-       <div class="table-responsive">
-        <!-- <table class="aura-table">
-              <thead>
-                  <tr>
-                      <th>Residencia</th>
-                      <th>Identificador</th>
-                      <th>Código</th>
-                      <th>Estado</th>
-                      <th>Válido desde</th>
-                      <th>Válido hasta</th>
-                      <th>Uso</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td>A-102</td>
-                      <td>Juan Pérez</td>
-                      <td>#AUR-8421</td>
-                      <td><span class="badge resident">Residente</span></td>
-                      <td>29 Jul 2026 - 08:00</td>
-                      <td>29 Jul 2026 - 22:00</td>
-                      <td><span class="usage">5</span></td>
-                  </tr>
-
-                  <tr>
-                      <td>B-305</td>
-                      <td>María López</td>
-                      <td>#VIS-1024</td>
-                      <td><span class="badge visit">Visita</span></td>
-                      <td>29 Jul 2026 - 10:00</td>
-                      <td>29 Jul 2026 - 14:00</td>
-                      <td><span class="usage">1</span></td>
-                  </tr>
-                  <tr>
-                      <td>A-102</td>
-                      <td>Juan Pérez</td>
-                      <td>#AUR-8421</td>
-                      <td><span class="badge resident">Residente</span></td>
-                      <td>29 Jul 2026 - 08:00</td>
-                      <td>29 Jul 2026 - 22:00</td>
-                      <td><span class="usage">5</span></td>
-                  </tr>
-
-                   <tr>
-                      <td>A-102</td>
-                      <td>Juan Pérez</td>
-                      <td>#AUR-8421</td>
-                      <td><span class="badge resident">Residente</span></td>
-                      <td>29 Jul 2026 - 08:00</td>
-                      <td>29 Jul 2026 - 22:00</td>
-                      <td><span class="usage">5</span></td>
-                  </tr>
-              </tbody>
-          </table> -->
+      
+      <div class="card-body action-body">
+        <p class="card-desc">¿Necesitas crear un acceso ahora?</p>
+        <button class="btn-action vehicle">
+          <span class="material-symbols-outlined">directions_car</span> Entrada Vehicular
+        </button>
+        
+        <button class="btn-action pedestrian">
+          <span class="material-symbols-outlined">directions_walk</span> Entrada Peatonal
+        </button>
+        
+        <div class="divider"></div>
+        
+        <button class="btn-action alert">
+          <span class="material-symbols-outlined">warning</span> Reportar Incidencia
+        </button>
       </div>
     </div>
 
+    <!-- BITÁCORA / NOTIFICACIONES DE SOCKET -->
+    <div class="card-lg notifications-card">
+      <div class="card-header">
+        <div class="header-title-wrapper">
+          <div class="header-title">
+            <span class="header-line"></span>
+            <span class="material-symbols-outlined icon-live">notifications_active</span>
+            <div>
+              <h3>Alertas de Acceso en Tiempo Real</h3>
+              <small>Notificaciones instantáneas vía WebSockets (autodescarte a los 10 min)</small>
+            </div>
+          </div>
 
-      <div class="gatehouse-container">
-          <h3>Alertas de Gatehouse (Android)</h3>
+          <!-- Acciones de Filtro y Limpieza -->
+          <div class="notifications-actions">
+            <div class="filter-group">
+              <button 
+                class="btn-filter" 
+                [class.active]="currentFilter === 'all'" 
+                (click)="setFilter('all')">
+                Todos ({{ notifications.length }})
+              </button>
+              <button 
+                class="btn-filter filter-granted" 
+                [class.active]="currentFilter === 'granted'" 
+                (click)="setFilter('granted')">
+                <span class="material-symbols-outlined">check_circle</span>
+                Permitidos ({{ countGranted }})
+              </button>
+              <button 
+                class="btn-filter filter-denied" 
+                [class.active]="currentFilter === 'denied'" 
+                (click)="setFilter('denied')">
+                <span class="material-symbols-outlined">cancel</span>
+                Denegados ({{ countDenied }})
+              </button>
+            </div>
 
-          @if (notificaciones.length === 0) {
-            <p class="sin-datos">Esperando notificaciones en tiempo real desde Android...</p>
-          }
+            @if (notifications.length > 0) {
+              <button class="btn-clear" (click)="clearNotifications()" title="Limpiar lista">
+                <span class="material-symbols-outlined">delete_sweep</span>
+                Limpiar
+              </button>
+            }
+          </div>
+        </div>
+      </div>
 
-          <!-- Renderizado de las notificaciones recibidas -->
+      <div class="card-body">
+        @if (filteredNotifications.length === 0) {
+          <div class="sin-datos-container">
+            <span class="material-symbols-outlined">notifications_off</span>
+            <h4>Sin notificaciones recibidas</h4>
+            <p>Las alertas de acceso validadas por QR, escáner o placa vehicular aparecerán aquí automáticamente en tiempo real.</p>
+          </div>
+        } @else {
           <div class="lista-notificaciones">
-            @for (item of notificaciones; track $index) {
-              <div class="tarjeta-notificacion">
-                <h3>{{ item.title }}</h3>
-                <p>{{ item.body }}</p>
-                @if (item.timestamp) {
-                  <small>{{ item.timestamp }}</small>
-                }
+            @for (item of paginatedNotifications; track item.id) {
+              <div 
+                class="tarjeta-notificacion" 
+                [ngClass]="item.statusClass"
+                (click)="openModal(item)">
+                
+                <div class="card-top-row">
+                  <div class="badges-left">
+                    <!-- Status Badge -->
+                    <span class="badge-status" [ngClass]="item.statusClass">
+                      <span class="material-symbols-outlined">{{ item.statusIcon }}</span>
+                      {{ item.statusText }}
+                    </span>
+
+                    <!-- Type Badge -->
+                    <span class="badge-tag type-tag">
+                      <span class="material-symbols-outlined">{{ item.accessTypeIcon }}</span>
+                      {{ item.accessTypeLabel }}
+                    </span>
+
+                    <!-- Method Badge -->
+                    <span class="badge-tag method-tag">
+                      <span class="material-symbols-outlined">{{ item.methodIcon }}</span>
+                      {{ item.methodLabel }}
+                    </span>
+                  </div>
+
+                  <span class="time-stamp">
+                    <span class="material-symbols-outlined">schedule</span>
+                    {{ item.formattedTime }}
+                  </span>
+                </div>
+
+                <div class="card-main-content">
+                  <h4 class="guest-title">{{ item.guestName }}</h4>
+                  <p class="residence-info">
+                    <span class="material-symbols-outlined">location_home</span>
+                    {{ item.residenceInfo }}
+                  </p>
+                  <p class="message-text">{{ item.message }}</p>
+                </div>
+
+                <div class="card-footer-row">
+                  <div class="footer-pills">
+                    @if (item.scannedCode) {
+                      <span class="code-pill" title="Código / Placa escaneada">
+                        <span class="material-symbols-outlined">qr_code</span>
+                        {{ item.scannedCode }}
+                      </span>
+                    }
+                    @if (item.deviceIdentifier) {
+                      <span class="device-pill" title="Lector / Cámara">
+                        <span class="material-symbols-outlined">sensors</span>
+                        {{ item.deviceIdentifier }}
+                      </span>
+                    }
+                  </div>
+
+                  <button class="btn-detail-link" (click)="$event.stopPropagation(); openModal(item)">
+                    <span>Ver detalle</span>
+                    <span class="material-symbols-outlined">open_in_new</span>
+                  </button>
+                </div>
               </div>
             }
           </div>
-      </div>
 
+          <!-- Barra de Paginación -->
+          @if (filteredNotifications.length > 0) {
+            <div class="pagination-bar">
+              <div class="pagination-info">
+                <span>Mostrando <strong>{{ startIndex }} - {{ endIndex }}</strong> de <strong>{{ filteredNotifications.length }}</strong> notificaciones</span>
+              </div>
+
+              @if (totalPages > 1) {
+                <div class="pagination-controls">
+                  <button 
+                    class="btn-page btn-nav" 
+                    [disabled]="currentPage === 1" 
+                    (click)="changePage(currentPage - 1)"
+                    title="Página anterior">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                  </button>
+
+                  <div class="page-numbers">
+                    @for (pag of pagesArray(); track pag) {
+                      <button 
+                        class="btn-page" 
+                        [class.active]="pag === currentPage" 
+                        (click)="changePage(pag)">
+                        {{ pag }}
+                      </button>
+                    }
+                  </div>
+
+                  <button 
+                    class="btn-page btn-nav" 
+                    [disabled]="currentPage === totalPages" 
+                    (click)="changePage(currentPage + 1)"
+                    title="Página siguiente">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
     </div>
   </div>
 </div>
+
+<!-- MODAL DE DETALLE COMPLETO -->
+@if (isModalOpen && selectedNotification) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      
+      <!-- Modal Header -->
+      <div class="modal-header" [ngClass]="selectedNotification.statusClass">
+        <div class="modal-header-content">
+          <span class="material-symbols-outlined modal-status-icon">
+            {{ selectedNotification.statusIcon }}
+          </span>
+          <div>
+            <h3>Acceso {{ selectedNotification.statusText }}: {{ selectedNotification.guestName }}</h3>
+            <small>Fecha y hora: {{ selectedNotification.timestamp | date:'medium' }}</small>
+          </div>
+        </div>
+        <button class="btn-close" (click)="closeModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        
+        <!-- Status Banner -->
+        <div class="status-banner" [ngClass]="selectedNotification.statusClass">
+          <span class="material-symbols-outlined banner-icon">{{ selectedNotification.statusIcon }}</span>
+          <div class="banner-text">
+            <strong>Estado del Acceso: {{ selectedNotification.statusText }}</strong>
+            <p>{{ selectedNotification.message }}</p>
+          </div>
+        </div>
+
+        <!-- Grid de Información -->
+        <div class="detail-grid">
+          
+          <!-- Card 1: Información Principal -->
+          <div class="detail-section">
+            <div class="section-title">
+              <span class="material-symbols-outlined">info</span>
+              <h4>Información General</h4>
+            </div>
+            <div class="info-rows">
+              <div class="info-row">
+                <span class="label">Sujeto / Invitado:</span>
+                <span class="value highlight">{{ selectedNotification.guestName }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Residencia / Manzana:</span>
+                <span class="value">{{ selectedNotification.residenceInfo }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Tipo de Acceso:</span>
+                <span class="value badge-inline">
+                  <span class="material-symbols-outlined">{{ selectedNotification.accessTypeIcon }}</span>
+                  {{ selectedNotification.accessTypeLabel }}
+                </span>
+              </div>
+              <div class="info-row">
+                <span class="label">Método de Validación:</span>
+                <span class="value badge-inline">
+                  <span class="material-symbols-outlined">{{ selectedNotification.methodIcon }}</span>
+                  {{ selectedNotification.methodLabel }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Lector y Código -->
+          <div class="detail-section">
+            <div class="section-title">
+              <span class="material-symbols-outlined">qr_code_scanner</span>
+              <h4>Dispositivo y Lectura</h4>
+            </div>
+            <div class="info-rows">
+              <div class="info-row">
+                <span class="label">Código Escaneado:</span>
+                <span class="value font-mono">{{ selectedNotification.scannedCode || 'N/A' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Identificador de Dispositivo:</span>
+                <span class="value font-mono">{{ selectedNotification.deviceIdentifier || 'No especificado' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Origen / Fuente:</span>
+                <span class="value">{{ selectedNotification.sourceType }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Detalles de Vehículo (Si aplica) -->
+          @if (selectedNotification.plateDetails) {
+            <div class="detail-section highlight-section">
+              <div class="section-title">
+                <span class="material-symbols-outlined">directions_car</span>
+                <h4>Detalles del Vehículo</h4>
+              </div>
+              <div class="info-rows">
+                <div class="info-row">
+                  <span class="label">Placa:</span>
+                  <span class="value font-mono plate-badge">{{ selectedNotification.plateDetails.plate }}</span>
+                </div>
+                @if (selectedNotification.plateDetails.brand) {
+                  <div class="info-row">
+                    <span class="label">Marca:</span>
+                    <span class="value">{{ selectedNotification.plateDetails.brand }}</span>
+                  </div>
+                }
+                @if (selectedNotification.plateDetails.color) {
+                  <div class="info-row">
+                    <span class="label">Color:</span>
+                    <span class="value">{{ selectedNotification.plateDetails.color }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Card 4: Detalles del Código QR (Si aplica) -->
+          @if (selectedNotification.accessCodeDetails) {
+            <div class="detail-section highlight-section">
+              <div class="section-title">
+                <span class="material-symbols-outlined">vpn_key</span>
+                <h4>Reglas del Código QR</h4>
+              </div>
+              <div class="info-rows">
+                @if (selectedNotification.accessCodeDetails.id) {
+                  <div class="info-row">
+                    <span class="label">ID de Código:</span>
+                    <span class="value font-mono">#{{ selectedNotification.accessCodeDetails.id }}</span>
+                  </div>
+                }
+                <div class="info-row">
+                  <span class="label">Contador de Usos:</span>
+                  <span class="value">
+                    {{ selectedNotification.accessCodeDetails.uses }} 
+                    @if (selectedNotification.accessCodeDetails.maxUses !== null) { / {{ selectedNotification.accessCodeDetails.maxUses }} }
+                    @else { (Ilimitado) }
+                  </span>
+                </div>
+                @if (selectedNotification.accessCodeDetails.validFrom) {
+                  <div class="info-row">
+                    <span class="label">Válido desde:</span>
+                    <span class="value">{{ selectedNotification.accessCodeDetails.validFrom }}</span>
+                  </div>
+                }
+                @if (selectedNotification.accessCodeDetails.validUntil) {
+                  <div class="info-row">
+                    <span class="label">Válido hasta:</span>
+                    <span class="value">{{ selectedNotification.accessCodeDetails.validUntil }}</span>
+                  </div>
+                }
+                @if (selectedNotification.accessCodeDetails.activeDaysFormatted) {
+                  <div class="info-row">
+                    <span class="label">Días Autorizados:</span>
+                    <span class="value">{{ selectedNotification.accessCodeDetails.activeDaysFormatted }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Raw JSON Inspector accordion -->
+        <div class="raw-json-container">
+          <button class="btn-toggle-json" (click)="showRawJson = !showRawJson">
+            <span class="material-symbols-outlined">code</span>
+            {{ showRawJson ? 'Ocultar JSON de WebSocket' : 'Inspeccionar Payload RAW (JSON)' }}
+            <span class="material-symbols-outlined icon-chevron">
+              {{ showRawJson ? 'expand_less' : 'expand_more' }}
+            </span>
+          </button>
+          
+          @if (showRawJson) {
+            <pre class="json-code"><code>{{ selectedNotification.rawPayload | json }}</code></pre>
+          }
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+}
