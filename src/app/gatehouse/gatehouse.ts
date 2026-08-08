@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angula
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { NotificationWebsocket, NotificationPayload, ConnectionState } from '../services/notification-websocket';
+import { ModalComponent } from '../shared/components/modal/modal';
 
 export interface ParsedNotification {
   id: string;
@@ -52,7 +53,7 @@ export interface ParsedNotification {
 @Component({
   selector: 'app-gatehouse',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ModalComponent],
   templateUrl: './gatehouse.html',
   styleUrl: './gatehouse.scss'
 })

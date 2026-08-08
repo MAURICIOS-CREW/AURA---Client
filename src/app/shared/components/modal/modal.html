@@ -1,0 +1,45 @@
+@if (isOpen) {
+  <div class="modal-backdrop" (click)="onBackdropClick()">
+    <div class="modal-card" [style.max-width]="maxWidth" (click)="onCardClick($event)">
+      
+      <!-- Modal Header -->
+      <div class="modal-header" [ngClass]="headerClass">
+        <div class="modal-header-content">
+          <!-- Projected custom header if provided -->
+          <ng-content select="[modal-header]"></ng-content>
+
+          <!-- Fallback default header if title/icon provided and no custom header projected -->
+          @if (title) {
+            @if (icon) {
+              <span class="material-symbols-outlined modal-status-icon">{{ icon }}</span>
+            }
+            <div>
+              <h3>{{ title }}</h3>
+              @if (subtitle) {
+                <small>{{ subtitle }}</small>
+              }
+            </div>
+          }
+        </div>
+
+        @if (showCloseButton) {
+          <button type="button" class="btn-close" (click)="close()" aria-label="Cerrar modal">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        }
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <ng-content select="[modal-body]"></ng-content>
+        <ng-content></ng-content>
+      </div>
+
+      <!-- Modal Footer (only renders container if footer content is present or projected) -->
+      <div class="modal-footer">
+        <ng-content select="[modal-footer]"></ng-content>
+      </div>
+
+    </div>
+  </div>
+}
