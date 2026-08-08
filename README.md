@@ -15,6 +15,31 @@ El proyecto está preparado para ejecutarse completamente en un entorno de desar
 
 ---
 
+## Comunicación con Backend (Red Docker Compartida)
+
+El cliente frontend (`/Client`) y el servidor de backend (`/Backend`) residen en contenedores Docker y proyectos `docker-compose` independientes. Para permitir la comunicación bidireccional entre ambos (incluyendo sockets/WebSockets, peticiones HTTP e interacción entre contenedores), ambos proyectos están conectados a una red Docker compartida llamada **`aura-network`**.
+
+### 1. Creación de la Red `aura-network`
+* **Automática con NPM**: Al ejecutar `npm run docker:up` en la carpeta `Client`, el script verifica y crea automáticamente la red `aura-network` si no existe previamente antes de iniciar los contenedores.
+* **Automática desde Backend**: Si levantas primero el backend con `./sail up -d` desde la raíz del proyecto, Sail creará automáticamente la red `aura-network`.
+* **Creación Manual**: Si deseas crear la red manualmente por única vez en tu terminal, ejecuta:
+  ```bash
+  docker network create aura-network
+  ```
+
+### 2. Hostnames para Comunicación entre Contenedores y Navegador
+
+| Tipo de Conexión | Origen -> Destino | URL / Hostname | Descripción |
+| :--- | :--- | :--- | :--- |
+| **Navegador Host** | Browser -> Client | `http://localhost:4200` | Interfaz web Angular |
+| **Navegador Host** | Browser -> Backend API | `http://localhost/api` | Endpoints API REST de Laravel |
+| **Navegador Host** | Browser -> WebSockets | `ws://localhost:8080` | Servidor WebSocket Laravel Reverb |
+| **Interna Docker** | Client -> Backend API | `http://laravel.test:80` | Peticiones HTTP directas del contenedor frontend al backend |
+| **Interna Docker** | Client -> WebSockets | `ws://reverb:8080` | Conexión WebSocket interna entre contenedores |
+| **Interna Docker** | Backend -> Client | `http://aura-client-dev:4200` | Peticiones directas o notificaciones del backend al frontend |
+
+---
+
 ## Configuración de Entornos y Seguridad en Git
 
 Para evitar hardcodear URLs y proteger datos sensibles o configuraciones locales:

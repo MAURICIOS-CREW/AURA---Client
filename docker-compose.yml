@@ -19,3 +19,10 @@ services:
       - NG_CLI_ANALYTICS=false
     stdin_open: true
     tty: true
+    networks:
+      - aura-network
+
+networks:
+  aura-network:
+    name: aura-network
+    external: true
