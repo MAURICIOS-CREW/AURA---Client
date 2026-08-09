@@ -110,7 +110,7 @@ li {
   justify-content: center;
   gap: 8px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.4rem;
   transition: background 0.2s ease, color 0.2s ease;
 
   &:hover {
@@ -119,13 +119,13 @@ li {
   }
 
   span {
-    font-size: 20px;
+    font-size: 30px;
   }
 }
 
 .card-lg {
   width: 100%;
-
+  margin-top: 25px;
   background: #fff;
   border-radius: 18px;
   border: 1px solid #edf2f7;
@@ -254,6 +254,12 @@ li {
     -webkit-overflow-scrolling:touch;
 }
 
+
+.incident-icon {
+  color: #2E6DB4 !important;
+  background: #e8f1fa !important;
+}
+
 /* ===========================
    BADGES
 =========================== */
@@ -274,7 +280,7 @@ li {
 .badge-qr{
   background: #f3e8ff; 
   color: #9333ea;;
-
+  
 }
 
 .badge-plate{
@@ -297,3 +303,124 @@ li {
   color: #084298;
 }
 
+.badge-open {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge-viewed {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.badge-progress {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.badge-attended {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.badge-created {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.badge-in-progress {
+   background: #fef3c7;
+  color: #d97706;
+}
+
+.service-icon {
+  color: #2E6DB4 !important;
+  background: #e8f1fa !important;
+}
+
+.dashboard-tables {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 25px;
+  margin-top: 30px;
+}
+
+@media (max-width: 1000px) {
+  .dashboard-tables {
+    grid-template-columns: 1fr;
+  }
+}
+
+.incident-chart {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.chart-bars {
+  height: 250px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 25px;
+
+  padding: 20px 30px 0;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.chart-column {
+  height: 100%;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+
+  position: relative;
+
+  span {
+    font-size: .8rem;
+    font-weight: 600;
+    color: #64748b;
+    text-align: center;
+  }
+}
+
+.chart-value {
+  font-size: .85rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.chart-bar {
+  width: 55px;
+  min-height: 5px;
+
+  border-radius: 8px 8px 0 0;
+
+  transition:
+    height .4s ease,
+    transform .2s ease;
+
+  &:hover {
+    transform: scaleX(1.08);
+  }
+}
+
+.badge-open-bar {
+  background: #dc2626;
+}
+
+.badge-viewed-bar {
+  background: #d97706;
+}
+
+.badge-progress-bar {
+  background: #2563eb;
+}
+
+.badge-attended-bar {
+  background: #16a34a;
+}

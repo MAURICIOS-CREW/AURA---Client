@@ -1,6 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccessLogService, AccessLog } from '../services/access-log.service';
+import { IncidentService, IncidentServiceItem } from '../services/incident.service';
+import { ContractedService, ContractedServiceItem } from '../services/contracted.service';
+import { UserService, Resident } from '../services/user.service';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -11,13 +15,32 @@ import { AccessLogService, AccessLog } from '../services/access-log.service';
 })
 export class Dashboard implements OnInit {
 private accessLogService = inject(AccessLogService);
+private incidentService = inject(IncidentService);
+private userService = inject(UserService);
+private contractedService = inject(ContractedService);
 
   accessLogsList = signal<AccessLog[]>([]);
+  residents = signal<Resident[]>([]);
+  incidentsList = signal<IncidentServiceItem[]>([]);
+  pendingServices = signal<ContractedServiceItem[]>([]);
+  openIncidents = signal<number>(0);
+
   isLoading = signal<boolean>(true);
   
-  ngOnInit(): void {
-    this.fetchAccessLogs();
-  }
+  incidentStatusStats = signal({
+    open: 0,
+    viewed: 0,
+    in_progress: 0,
+    attended: 0
+  });
+
+  
+ngOnInit(): void {
+  this.fetchAccessLogs();
+  this.fetchIncidents();
+  this.fetchPendingServices();
+  this.fetchResidents();
+}
 
 fetchAccessLogs(): void {
      this.accessLogService
@@ -45,6 +68,89 @@ fetchAccessLogs(): void {
 
 }
 
+fetchIncidents(): void {
+  this.incidentService.getIncidents().subscribe({
+    next: (response) => {
+      this.incidentsList.set(response.data);
+
+const stats = response.data.reduce(
+    (acc, incident) => {
+      if (incident.status === 'open') {
+        acc.open++;
+      }
+
+      if (incident.status === 'viewed') {
+        acc.viewed++;
+      }
+
+      if (incident.status === 'in_progress') {
+        acc.in_progress++;
+      }
+
+      if (incident.status === 'attended') {
+        acc.attended++;
+      }
+
+          return acc;
+        },
+        {
+          open: 0,
+          viewed: 0,
+          in_progress: 0,
+          attended: 0
+        }
+      );
+
+      this.incidentStatusStats.set(stats);
+      this.openIncidents.set(stats.open);
+    },
+
+    error: (error) => {
+      console.error(
+        'Error cargando incidencias del dashboard:',
+        error
+      );
+    }
+  });
+}
+
+fetchResidents(): void {
+  this.userService.getResidents().subscribe({
+    next: (response) => {
+      this.residents.set(response.data);
+    },
+
+    error: (error) => {
+      console.error(
+        'Error cargando residentes del dashboard:',
+        error
+      );
+    }
+  });
+}
+
+fetchPendingServices(): void {
+  this.contractedService.getContractedServices().subscribe({
+    next: (response) => {
+
+      const pending = response.data.filter(
+        service =>
+          service.status === 'created' ||
+          service.status === 'in_progress'
+      );
+
+      this.pendingServices.set(pending);
+    },
+
+    error: (error) => {
+      console.error(
+        'Error cargando servicios pendientes:',
+        error
+      );
+    }
+  });
+}
+
 getAccessTypeClass(access_type: string): string {
   switch (access_type?.toLowerCase()) {
     case 'qr':
@@ -61,7 +167,7 @@ getAccessTypeClass(access_type: string): string {
 getAccessTypeLabel(access_type: string): string {
   switch (access_type?.toLowerCase()) {
     case 'qr':
-      return 'Por QR';open
+      return 'Por QR';
 
     case 'plate':
       return 'Por Placa';
@@ -97,5 +203,30 @@ getMethodLabel(method: string): string {
   }
 }
 
+getServiceStatusClass(status: string): string {
+  switch (status?.toLowerCase()) {
+    case 'created':
+      return 'badge-created';
+
+    case 'in_progress':
+      return 'badge-in-progress';
+
+    default:
+      return 'badge-unknown';
+  }
+}
+
+getServiceStatusLabel(status: string): string {
+  switch (status?.toLowerCase()) {
+    case 'created':
+      return 'Creado';
+
+    case 'in_progress':
+      return 'En progreso';
+
+    default:
+      return 'Desconocido';
+  }
+}
 
 }

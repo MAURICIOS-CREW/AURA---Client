@@ -20,7 +20,7 @@ export class ListOfServices implements OnInit {
     this.fetchServices();
   }
 
-  fetchServices(): void {
+fetchServices(): void {
     this.contractedService.getContractedServices().subscribe({
       next: (response) => {
         console.log(response);
@@ -40,7 +40,7 @@ export class ListOfServices implements OnInit {
         this.isLoading.set(false);
       }
     });
-  }
+}
 
 getStatusClass(status: string): string {
   switch (status?.toLowerCase()) {

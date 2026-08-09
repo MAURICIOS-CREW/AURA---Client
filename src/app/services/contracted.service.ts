@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 export interface ContractedServiceItem {
   id: number;
   created_at: string;
+  status: string; 
 
   service?: {
     title: string;

@@ -12,14 +12,11 @@
           <span class="material-symbols-outlined">groups</span>
         </div>
         <div class="card-info">
-          <h3>Residentes activos</h3>
-          <div class="card-value">320</div>
-          <div class="card-trend positive">+12 este mes</div>
+          <h3>Residentes Registrados</h3>
+          <div class="card-value">{{ residents().length }}</div>
+          <div class="card-trend positive">+2 este mes</div>
         </div>
       </div>
-      <button class="btn-report">
-        <span class="material-symbols-outlined">description</span> Generar reporte
-      </button>
     </div>
 
     <div class="card">
@@ -29,48 +26,210 @@
         </div>
         <div class="card-info">
           <h3>Incidencias abiertas</h3>
-          <div class="card-value">12</div>
+          <div class="card-value">{{ openIncidents() }}</div>
           <div class="card-trend negative">-4 vs ayer</div>
         </div>
       </div>
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
       <button class="btn-report">
         <span class="material-symbols-outlined">description</span> Generar reporte
       </button>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="card-content">
-        <div class="card-icon green">
-          <span class="material-symbols-outlined">calendar_today</span>
-        </div>
-        <div class="card-info">
-          <h3>Actividades hoy</h3>
-          <div class="card-value">8</div>
-          <div class="card-trend positive">+2 vs ayer</div>
+<div class="dashboard-tables"> 
+  <div class="card-lg">
+    <div class="card-header">
+      <div class="header-title">
+        <span class="material-symbols-outlined incident-icon">analytics</span>
+        <div>
+          <h3>Incidencias por estatus</h3>
+          <small>Resumen actual de incidencias</small>
         </div>
       </div>
-      <button class="btn-report">
-        <span class="material-symbols-outlined">description</span> Generar reporte
-      </button>
     </div>
 
-    <div class="card">
-      <div class="card-content">
-        <div class="card-icon purple">
-          <span class="material-symbols-outlined">emoji_people</span>
-        </div>
-        <div class="card-info">
-          <h3>Visitas esperadas</h3>
-          <div class="card-value">24</div>
-          <div class="card-trend positive">+5 vs ayer</div>
+    <div class="card-body">
+
+      <!-- Gráfica de incidencias por estatus -->
+      <div class="incident-chart">
+        <div class="chart-bars">
+          <!-- Abierto -->
+          <div class="chart-column">
+            <div class="chart-value">
+              {{ incidentStatusStats().open }}
+            </div>
+
+            <div
+              class="chart-bar badge-open-bar"
+              [style.height.%]="incidentStatusStats().open * 10"
+            ></div>
+            <span>Abierto</span>
+          </div>
+
+          <!-- Visto -->
+          <div class="chart-column">
+            <div class="chart-value">
+              {{ incidentStatusStats().viewed }}
+            </div>
+
+            <div
+              class="chart-bar badge-viewed-bar"
+              [style.height.%]="incidentStatusStats().viewed * 10"
+            ></div>
+            <span>Visto</span>
+          </div>
+
+          <!-- En progreso -->
+          <div class="chart-column">
+            <div class="chart-value">
+              {{ incidentStatusStats().in_progress }}
+            </div>
+
+            <div
+              class="chart-bar badge-progress-bar"
+              [style.height.%]="incidentStatusStats().in_progress * 10"
+            ></div>
+            <span>En progreso</span>
+          </div>
+          <!-- Atendido -->
+          <div class="chart-column">
+            <div class="chart-value">
+              {{ incidentStatusStats().attended }}
+            </div>
+
+            <div
+              class="chart-bar badge-attended-bar"
+              [style.height.%]="incidentStatusStats().attended * 10"
+            ></div>
+
+            <span>Atendido</span>
+          </div>
         </div>
       </div>
-      <button class="btn-report">
-        <span class="material-symbols-outlined">description</span> Generar reporte
-      </button>
+
+
+      <!-- Tabla de incidencias -->
+      <table class="aura-table">
+        <thead>
+          <tr>
+            <th>Estatus</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              <span class="badge badge-open">
+                Abierto
+              </span>
+            </td>
+            <td>{{ incidentStatusStats().open }}</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="badge badge-viewed">
+                Visto
+              </span>
+            </td>
+            <td>{{ incidentStatusStats().viewed }}</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="badge badge-progress">
+                En progreso
+              </span>
+            </td>
+            <td>{{ incidentStatusStats().in_progress }}</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="badge badge-attended">
+                Atendido
+              </span>
+            </td>
+            <td>{{ incidentStatusStats().attended }}</td>
+          </tr>
+        </tbody>
+      </table>
+
     </div>
 
   </div>
+
+  <div class="card-lg">
+    <div class="card-header">
+      <div class="header-title">
+        <span class="material-symbols-outlined service-icon">
+          engineering
+        </span>
+
+        <div>
+          <h3>Servicios pendientes</h3>
+          <small>Servicios creados y en progreso</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="aura-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Servicio</th>
+              <th>Residente</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @if (pendingServices().length === 0) {
+
+              <tr>
+                <td colspan="4" class="text-center py-4">
+                  No hay servicios pendientes.
+                </td>
+              </tr>
+
+            } @else {
+
+              @for (item of pendingServices(); track item.id) {
+                <tr>
+                  <td>
+                    {{ item.created_at | date:'dd MMM yyyy · HH:mm' }}
+                  </td>
+                  <td>
+                    {{ item.service?.title || 'Sin servicio' }}
+                  </td>
+                  <td>
+                    {{ item.user?.name || 'Sin residente' }}
+                  </td>
+                <td>
+                    <span [class]="'badge ' + getServiceStatusClass(item.status)">
+                      {{ getServiceStatusLabel(item.status) }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
     <div class="allaccess-grid">
         <div class="card-lg">
@@ -102,13 +261,13 @@
                             @if (isLoading()) {
                                 <tr>
                                     <td colspan="5" class="text-center py-4">
-                                        Cargando accesos vehiculares...
+                                        Cargando todos los accesos al residencial...
                                     </td>
                                 </tr>
                             } @else if (accessLogsList().length === 0) {
                                 <tr>
                                     <td colspan="5" class="text-center py-4">
-                                        No hay accesos vehiculares registrados.
+                                        No hay accesos registrados.
                                     </td>
                                 </tr>
                             } @else {
