@@ -40,14 +40,40 @@
       </div>
     </div>
 
-    <div>
-      
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon orange">
+          <span class="material-symbols-outlined">engineering</span>
+        </div>
+        <div class="card-info">
+          <h3>Servicios pendientes</h3>
+          @if (isLoadingServices()) {
+            <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 60px;"></div>
+          } @else {
+            <div class="card-value aura-row-enter">{{ pendingServices().length }}</div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-icon green">
+          <span class="material-symbols-outlined">task_alt</span>
+        </div>
+        <div class="card-info">
+          <h3>Servicios completados este mes</h3>
+          @if (isLoadingServices()) {
+            <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 60px;"></div>
+          } @else {
+            <div class="card-value aura-row-enter">{{ completedServicesThisMonth() }}</div>
+          }
+        </div>
+      </div>
     </div>
 
     <div>
-      <button class="btn-report">
-        <span class="material-symbols-outlined">description</span> Generar reporte
-      </button>
+      <app-report-generator reportType="dashboard" variant="report" />
     </div>
   </div>
 

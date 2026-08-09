@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
 import { ContractedService, ContractedServiceItem } from '../services/contracted.service';
+import { ReportGeneratorComponent } from '../shared/components/report-generator/report-generator';
 
 @Component({
   selector: 'app-list-of-services',
   standalone: true,
-  imports: [CommonModule, DatePipe, CurrencyPipe],
+  imports: [CommonModule, DatePipe, CurrencyPipe, ReportGeneratorComponent],
   templateUrl: './list-of-services.html',
   styleUrl: './list-of-services.scss'
 })
@@ -73,7 +74,7 @@ getStatusLabel(status: string): string {
       return 'Pendiente';
 
     case 'in_progress':
-      return 'En progreso';open
+      return 'En progreso';
 
     case 'refunded':
       return 'Reembolsado';

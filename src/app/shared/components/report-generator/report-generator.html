@@ -1,0 +1,91 @@
+<button
+  type="button"
+  [class]="variant === 'report' ? 'btn-report' : 'btn-primary'"
+  (click)="openModal()"
+>
+  <span class="material-symbols-outlined">description</span>
+  {{ label }}
+</button>
+
+<app-modal
+  [isOpen]="isModalOpen()"
+  headerClass="primary"
+  title="Generar reporte"
+  subtitle="Elige el periodo que quieres incluir en el PDF"
+  icon="picture_as_pdf"
+  [closeOnBackdrop]="!isGenerating()"
+  [closeOnEsc]="!isGenerating()"
+  [showCloseButton]="!isGenerating()"
+  (closed)="closeModal()"
+>
+  <div modal-body>
+    <div class="range-chips">
+      @for (option of rangeOptions; track option.key) {
+        <button
+          type="button"
+          class="range-chip"
+          [class.active]="selectedRange() === option.key"
+          [disabled]="isGenerating()"
+          (click)="selectRange(option.key)"
+        >
+          <span class="material-symbols-outlined">{{ option.icon }}</span>
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    @if (selectedRange() === 'custom') {
+      <div class="custom-range aura-row-enter">
+        <div class="form-group">
+          <label for="report-from">Desde</label>
+          <input
+            type="date"
+            id="report-from"
+            [(ngModel)]="customFrom"
+            [max]="customTo"
+            [disabled]="isGenerating()"
+          >
+        </div>
+        <div class="form-group">
+          <label for="report-to">Hasta</label>
+          <input
+            type="date"
+            id="report-to"
+            [(ngModel)]="customTo"
+            [min]="customFrom"
+            [disabled]="isGenerating()"
+          >
+        </div>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="form-feedback error aura-row-enter">
+        <span class="material-symbols-outlined">error</span>
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="form-feedback success aura-row-enter">
+        <span class="material-symbols-outlined">check_circle</span>
+        {{ successMessage() }}
+      </div>
+    }
+  </div>
+
+  <div modal-footer>
+    <button type="button" class="btn-secondary" [disabled]="isGenerating()" (click)="closeModal()">
+      Cancelar
+    </button>
+    <button type="button" class="btn-primary" [disabled]="isGenerating() || isCustomInvalid" (click)="generate()">
+      @if (isGenerating()) {
+        <app-spinner variant="light" />
+        Generando...
+      } @else {
+        <span class="material-symbols-outlined">open_in_new</span>
+        Generar PDF
+      }
+    </button>
+  </div>
+</app-modal>

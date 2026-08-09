@@ -1,6 +1,9 @@
 <div class="dashboard-wrapper">
     <div class="dashboard-header">
-        <h2>Módulo de Finanzas</h2>
+        <div class="header-top">
+            <h2>Módulo de Finanzas</h2>
+            <app-report-generator reportType="finance" variant="primary" label="Generar reporte" />
+        </div>
         <li>
             <span class="material-symbols-outlined">bar_chart_4_bars</span>
             Control de ingresos, egresos y cuotas de mantenimiento
@@ -8,6 +11,7 @@
     </div>
 
     <div>
+      <div class="section-label">Este mes</div>
       <div class="summary-cards">
         <div class="card">
             <div class="card-content">
@@ -16,7 +20,11 @@
                 </div>
                 <div class="card-info">
                     <h3>Ingresos del mes</h3>
-                    <div class="card-value">$45,000</div>
+                    @if (isLoadingSummary()) {
+                        <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 120px;"></div>
+                    } @else {
+                        <div class="card-value aura-row-enter">{{ summary()?.income_month | currency }}</div>
+                    }
                 </div>
             </div>
         </div>
@@ -29,7 +37,65 @@
 
                 <div class="card-info">
                     <h3>Egresos del mes</h3>
-                    <div class="card-value">$12,400</div>
+                    @if (isLoadingSummary()) {
+                        <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 120px;"></div>
+                    } @else {
+                        <div class="card-value aura-row-enter">{{ summary()?.expenses_month | currency }}</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <div class="card-icon" [class.green]="isPositive(summary()?.net_month)" [class.red]="!isPositive(summary()?.net_month)">
+                    <span class="material-symbols-outlined">balance</span>
+                </div>
+                <div class="card-info">
+                    <h3>Balance del mes</h3>
+                    @if (isLoadingSummary()) {
+                        <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 120px;"></div>
+                    } @else {
+                        <div class="card-value aura-row-enter" [class.positive]="isPositive(summary()?.net_month)" [class.negative]="!isPositive(summary()?.net_month)">
+                            {{ summary()?.net_month | currency }}
+                        </div>
+                        <div class="card-hint">Ingresos del mes − Egresos del mes</div>
+                    }
+                </div>
+            </div>
+        </div>
+     </div>
+
+      <div class="section-label">Histórico (desde siempre)</div>
+      <div class="summary-cards">
+        <div class="card">
+            <div class="card-content">
+                <div class="card-icon green">
+                    <span class="material-symbols-outlined">savings</span>
+                </div>
+                <div class="card-info">
+                    <h3>Ingresos totales</h3>
+                    @if (isLoadingSummary()) {
+                        <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 120px;"></div>
+                    } @else {
+                        <div class="card-value aura-row-enter">{{ summary()?.total_income | currency }}</div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-content">
+                <div class="card-icon red">
+                    <span class="material-symbols-outlined">payments</span>
+                </div>
+                <div class="card-info">
+                    <h3>Egresos totales</h3>
+                    @if (isLoadingSummary()) {
+                        <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 120px;"></div>
+                    } @else {
+                        <div class="card-value aura-row-enter">{{ summary()?.total_expenses | currency }}</div>
+                    }
                 </div>
             </div>
         </div>
@@ -41,133 +107,360 @@
                 </div>
                 <div class="card-info">
                     <h3>Fondo actual</h3>
-                    <div class="card-value">$128,600</div>
+                    @if (isLoadingSummary()) {
+                        <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 120px;"></div>
+                    } @else {
+                        <div class="card-value aura-row-enter">{{ summary()?.current_balance | currency }}</div>
+                        <div class="card-hint">Ingresos totales − Egresos totales</div>
+                    }
                 </div>
             </div>
         </div>
      </div>
     </div>
 
-      <div class="separator">
-        <div class="card-lg logs-card">
-          <div class="card-header">
-              <div class="header-title">
-                  <span class="header-line"></span>
-                  <span class="material-symbols-outlined">
-                      receipt_long
-                  </span>
-                  <div>
-                      <h3>Últimos Movimientos</h3>
-                      <small>Registro de ingresos y egresos recientes</small>
-                  </div>
-              </div>
+    <div class="card-lg transfers-card">
+      <div class="card-header">
+        <div class="header-title">
+          <span class="header-line"></span>
+          <span class="material-symbols-outlined">sync_alt</span>
+          <div>
+            <h3>Transferencias pendientes de aprobación</h3>
+            <small>Revisa el comprobante y aprueba o rechaza cada transferencia</small>
           </div>
+        </div>
+      </div>
 
-         <div class="card-body">
-            <div class="table-responsive">
-                <table class="aura-table">
-                    <thead>
-                        <tr>
-                            <th>Fecha y hora</th>
-                            <th>Concepto</th>
-                            <th>Residente / Proveedor</th>
-                            <th>Tipo</th>
-                            <th>Monto</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="aura-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Residente</th>
+                <th>Concepto</th>
+                <th>Monto</th>
+                <th>Comprobante</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (isLoadingTransfers()) {
+                @for (row of [0,1]; track row) {
+                  <tr>
+                    @for (col of [0,1,2,3,4,5]; track col) {
+                      <td><div class="skeleton-text"></div></td>
+                    }
+                  </tr>
+                }
+              } @else if (pendingTransfers().length === 0) {
+                <tr>
+                  <td colspan="6" class="text-center py-4">No hay transferencias pendientes de aprobación.</td>
+                </tr>
+              } @else {
+                @for (transfer of pendingTransfers(); track transfer.id; let i = $index) {
+                  <tr class="aura-row-enter" [style.--i]="i">
+                    <td>{{ transfer.created_at | date:'dd MMM yyyy · HH:mm' }}</td>
+                    <td>{{ transfer.user?.name || 'Residente' }}</td>
+                    <td>{{ transferConcept(transfer) }}</td>
+                    <td class="amount positive">{{ transfer.amount | currency }}</td>
+                    <td>
+                      @if (transfer.receipt_url) {
+                        <a [href]="transfer.receipt_url" target="_blank" rel="noopener" class="receipt-link">
+                          <span class="material-symbols-outlined">receipt_long</span> Ver
+                        </a>
+                      } @else {
+                        <span class="muted">Sin comprobante</span>
+                      }
+                    </td>
+                    <td>
+                      <div class="transfer-actions">
+                        <button type="button" class="btn-approve" (click)="askApproveTransfer(transfer)">
+                          <span class="material-symbols-outlined">check</span> Aprobar
+                        </button>
+                        <button type="button" class="btn-reject" (click)="askRejectTransfer(transfer)">
+                          <span class="material-symbols-outlined">close</span> Rechazar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
 
-                        <tr>
-                            <td>Hoy</td>
-                            <td>Cuota de mantenimiento</td>
-                            <td>Carlos Méndez (B-105)</td>
-
-                            <td>
-                                <span class="badge income">
-                                    Ingreso
-                                </span>
-                            </td>
-
-                            <td class="amount positive">
-                                +$1,500.00
-                            </td>
-
-                            <td>
-                                <span class="badge paid">
-                                    Pagado
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Ayer</td>
-                            <td>Mantenimiento de jardines</td>
-                            <td>Jardinería El Sol</td>
-
-                            <td>
-                                <span class="badge expense">
-                                    Egreso
-                                </span>
-                            </td>
-
-                            <td class="amount negative">
-                                -$3,200.00
-                            </td>
-
-                            <td>
-                                <span class="badge paid">
-                                    Pagado
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>15 Ene</td>
-                            <td>Reparación de portón</td>
-                            <td>Herrería Hnos.</td>
-
-                            <td>
-                                <span class="badge expense">
-                                    Egreso
-                                </span>
-                            </td>
-
-                            <td class="amount negative">
-                                -$8,500.00
-                            </td>
-
-                            <td>
-                                <span class="badge pending">
-                                    Pendiente
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>12 Ene</td>
-                            <td>Pago de vigilancia</td>
-                            <td>Seguridad Integral S.A.</td>
-
-                            <td>
-                                <span class="badge expense">
-                                    Egreso
-                                </span>
-                            </td>
-
-                            <td class="amount negative">
-                                -$18,500.00
-                            </td>
-                            <td>
-                                <span class="badge process">
-                                    En revisión
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-         </div>
-       </div>
+        @if (transferFeedback(); as feedback) {
+          <div class="form-feedback aura-row-enter" [class.success]="feedback.type === 'success'" [class.error]="feedback.type === 'error'">
+            <span class="material-symbols-outlined">{{ feedback.type === 'success' ? 'check_circle' : 'error' }}</span>
+            {{ feedback.message }}
+          </div>
+        }
+      </div>
     </div>
+
+    <div class="report-grid">
+      <div class="card-lg">
+        <div class="card-header">
+          <div class="header-title">
+            <span class="material-symbols-outlined">payments</span>
+            <h3>Registrar Egreso</h3>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <form class="aura-form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="concept">Concepto</label>
+              <input
+                type="text"
+                id="concept"
+                name="concept"
+                [(ngModel)]="concept"
+                [disabled]="isSubmitting()"
+                placeholder="Ej. Mantenimiento de jardines"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="category">Categoría</label>
+              <select
+                id="category"
+                name="category"
+                [(ngModel)]="category"
+                [disabled]="isSubmitting()"
+                required>
+                <option value="">Selecciona una categoría</option>
+                <option value="maintenance">Mantenimiento</option>
+                <option value="security">Seguridad</option>
+                <option value="utilities">Servicios (luz, agua, etc.)</option>
+                <option value="salaries">Nómina</option>
+                <option value="services">Servicios contratados</option>
+                <option value="supplies">Insumos</option>
+                <option value="other">Otro</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="amount">Monto</label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                min="0.01"
+                step="0.01"
+                [(ngModel)]="amount"
+                [disabled]="isSubmitting()"
+                placeholder="0.00"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="expense_date">Fecha del egreso</label>
+              <input
+                type="date"
+                id="expense_date"
+                name="expense_date"
+                [(ngModel)]="expense_date"
+                [disabled]="isSubmitting()"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="provider">Proveedor / Beneficiario</label>
+              <input
+                type="text"
+                id="provider"
+                name="provider"
+                [(ngModel)]="provider"
+                [disabled]="isSubmitting()"
+                placeholder="Ej. Jardinería El Sol">
+            </div>
+
+            <div class="form-group">
+              <label for="payment_method">Método de pago</label>
+              <select
+                id="payment_method"
+                name="payment_method"
+                [(ngModel)]="payment_method"
+                [disabled]="isSubmitting()">
+                <option value="">Selecciona un método</option>
+                <option value="cash">Efectivo</option>
+                <option value="transfer">Transferencia</option>
+                <option value="card">Tarjeta</option>
+                <option value="check">Cheque</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="status">Estado</label>
+              <select
+                id="status"
+                name="status"
+                [(ngModel)]="status"
+                [disabled]="isSubmitting()">
+                <option value="paid">Pagado</option>
+                <option value="pending">Pendiente</option>
+                <option value="cancelled">Cancelado</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Descripción (opcional)</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="3"
+                [(ngModel)]="description"
+                [disabled]="isSubmitting()"
+                placeholder="Detalles adicionales..."></textarea>
+            </div>
+
+            @if (successMessage) {
+              <div class="form-feedback success aura-row-enter">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ successMessage }}
+              </div>
+            }
+
+            @if (errorMessage) {
+              <div class="form-feedback error aura-row-enter">
+                <span class="material-symbols-outlined">error</span>
+                {{ errorMessage }}
+              </div>
+            }
+
+            <button type="submit" class="btn-primary" [disabled]="isSubmitting()">
+              @if (isSubmitting()) {
+                <app-spinner variant="light" />
+                Registrando...
+              } @else {
+                <span class="material-symbols-outlined">save</span>
+                Registrar egreso
+              }
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card-lg logs-card">
+        <div class="card-header">
+            <div class="header-title">
+                <span class="header-line"></span>
+                <span class="material-symbols-outlined">
+                    receipt_long
+                </span>
+                <div>
+                    <h3>Últimos Movimientos</h3>
+                    <small>Registro de ingresos y egresos recientes</small>
+                </div>
+            </div>
+        </div>
+
+       <div class="card-body">
+          <div class="table-responsive">
+              <table class="aura-table">
+                  <thead>
+                      <tr>
+                          <th>Fecha</th>
+                          <th>Concepto</th>
+                          <th>Residente / Proveedor</th>
+                          <th>Tipo</th>
+                          <th>Monto</th>
+                          <th>Estado</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+
+                      @if (isLoadingSummary()) {
+                          @for (row of [0,1,2,3]; track row) {
+                              <tr>
+                                  @for (col of [0,1,2,3,4,5]; track col) {
+                                      <td><div class="skeleton-text"></div></td>
+                                  }
+                              </tr>
+                          }
+                      } @else if (movements().length === 0) {
+                          <tr>
+                              <td colspan="6" class="text-center py-4">No hay movimientos registrados.</td>
+                          </tr>
+                      } @else {
+                          @for (movement of movements(); track movement.id; let i = $index) {
+                              <tr class="aura-row-enter" [style.--i]="i">
+                                  <td>{{ movement.date | date:'dd MMM yyyy' }}</td>
+                                  <td>{{ movement.concept }}</td>
+                                  <td>{{ movement.counterpart }}</td>
+
+                                  <td>
+                                      <span [class]="'badge ' + getMovementTypeClass(movement.type)">
+                                          {{ getMovementTypeLabel(movement.type) }}
+                                      </span>
+                                  </td>
+
+                                  <td class="amount" [class.positive]="movement.type === 'income'" [class.negative]="movement.type === 'expense'">
+                                      {{ movement.type === 'income' ? '+' : '-' }}{{ movement.amount | currency }}
+                                  </td>
+
+                                  <td>
+                                      <span [class]="'badge ' + getMovementStatusClass(movement.status)">
+                                          {{ getMovementStatusLabel(movement.status) }}
+                                      </span>
+                                  </td>
+                              </tr>
+                          }
+                      }
+                  </tbody>
+              </table>
+          </div>
+       </div>
+     </div>
+    </div>
+
+    <app-modal
+      [isOpen]="transferToReview() !== null"
+      [headerClass]="transferAction() === 'approve' ? 'success' : 'danger'"
+      [icon]="transferAction() === 'approve' ? 'check_circle' : 'cancel'"
+      [title]="transferAction() === 'approve' ? 'Aprobar transferencia' : 'Rechazar transferencia'"
+      subtitle="Esta acción actualizará el saldo financiero"
+      [closeOnBackdrop]="!isProcessingTransfer()"
+      [closeOnEsc]="!isProcessingTransfer()"
+      [showCloseButton]="!isProcessingTransfer()"
+      (closed)="closeTransferConfirm()"
+    >
+      <div modal-body>
+        @if (transferToReview(); as transfer) {
+          <p>
+            @if (transferAction() === 'approve') {
+              ¿Confirmas que la transferencia de <strong>{{ transfer.amount | currency }}</strong> de
+              <strong>{{ transfer.user?.name || 'este residente' }}</strong> fue recibida correctamente?
+              El cargo asociado se marcará como pagado.
+            } @else {
+              ¿Confirmas que quieres rechazar la transferencia de <strong>{{ transfer.amount | currency }}</strong> de
+              <strong>{{ transfer.user?.name || 'este residente' }}</strong>? El residente deberá intentar el pago nuevamente.
+            }
+          </p>
+        }
+      </div>
+
+      <div modal-footer>
+        <button type="button" class="btn-secondary" [disabled]="isProcessingTransfer()" (click)="closeTransferConfirm()">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          [class]="transferAction() === 'approve' ? 'btn-approve' : 'btn-reject'"
+          [disabled]="isProcessingTransfer()"
+          (click)="confirmTransferReview()"
+        >
+          @if (isProcessingTransfer()) {
+            <app-spinner variant="light" />
+            Procesando...
+          } @else if (transferAction() === 'approve') {
+            <span class="material-symbols-outlined">check</span> Sí, aprobar
+          } @else {
+            <span class="material-symbols-outlined">close</span> Sí, rechazar
+          }
+        </button>
+      </div>
+    </app-modal>
 </div>

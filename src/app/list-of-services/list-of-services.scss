@@ -297,6 +297,13 @@ li {
 
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .header-line{
     width:5px;
     height:42px;

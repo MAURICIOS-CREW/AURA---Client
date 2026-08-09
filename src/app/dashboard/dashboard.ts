@@ -4,12 +4,13 @@ import { AccessLogService, AccessLog } from '../services/access-log.service';
 import { IncidentService, IncidentServiceItem } from '../services/incident.service';
 import { ContractedService, ContractedServiceItem } from '../services/contracted.service';
 import { UserService, Resident } from '../services/user.service';
+import { ReportGeneratorComponent } from '../shared/components/report-generator/report-generator';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReportGeneratorComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -23,6 +24,7 @@ private contractedService = inject(ContractedService);
   residents = signal<Resident[]>([]);
   incidentsList = signal<IncidentServiceItem[]>([]);
   pendingServices = signal<ContractedServiceItem[]>([]);
+  completedServicesThisMonth = signal<number>(0);
   openIncidents = signal<number>(0);
 
   isLoadingAccessLogs = signal<boolean>(true);
@@ -149,6 +151,21 @@ fetchPendingServices(): void {
       );
 
       this.pendingServices.set(pending);
+
+      const now = new Date();
+      const completedThisMonth = response.data.filter(service => {
+        if (service.status !== 'completed') {
+          return false;
+        }
+
+        const updatedAt = new Date(service.updated_at);
+        return (
+          updatedAt.getMonth() === now.getMonth() &&
+          updatedAt.getFullYear() === now.getFullYear()
+        );
+      });
+
+      this.completedServicesThisMonth.set(completedThisMonth.length);
       this.isLoadingServices.set(false);
     },
 

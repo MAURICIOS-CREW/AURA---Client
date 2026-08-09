@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener, OnChanges, SimpleChanges, OnDestroy, ElementRef, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, OnChanges, SimpleChanges, OnDestroy, OnInit, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './modal.html',
   styleUrl: './modal.scss'
 })
-export class ModalComponent implements OnChanges, OnDestroy {
+export class ModalComponent implements OnInit, OnChanges, OnDestroy {
   /** Controls modal visibility */
   @Input() isOpen: boolean = false;
 
@@ -44,6 +44,19 @@ export class ModalComponent implements OnChanges, OnDestroy {
 
   private elementRef = inject(ElementRef);
 
+  /**
+   * Ciertos wrappers de página (`.dashboard-wrapper`) usan `backdrop-filter`,
+   * que crea un containing block nuevo para los hijos `position: fixed`.
+   * Sin esto, el backdrop del modal quedaba recortado dentro de ese wrapper
+   * en lugar de cubrir toda la ventana. Sacar el propio host al final de
+   * `<body>` evita el problema sin tener que tocar el CSS de cada página.
+   */
+  ngOnInit(): void {
+    if (typeof document !== 'undefined') {
+      document.body.appendChild(this.elementRef.nativeElement);
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['isOpen']) {
       this.handleBodyScroll(this.isOpen);
@@ -52,6 +65,10 @@ export class ModalComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.handleBodyScroll(false);
+
+    if (typeof document !== 'undefined' && this.elementRef.nativeElement.parentNode === document.body) {
+      document.body.removeChild(this.elementRef.nativeElement);
+    }
   }
 
   @HostListener('document:keydown.escape', ['$event'])
