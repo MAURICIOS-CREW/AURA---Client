@@ -1,0 +1,27 @@
+.aura-spinner {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(46, 109, 180, 0.25);
+  border-top-color: #2E6DB4;
+  animation: aura-spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+.aura-spinner--md {
+  width: 22px;
+  height: 22px;
+  border-width: 3px;
+}
+
+.aura-spinner--light {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+}
+
+@keyframes aura-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

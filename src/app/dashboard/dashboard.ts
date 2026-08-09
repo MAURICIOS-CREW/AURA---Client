@@ -25,8 +25,11 @@ private contractedService = inject(ContractedService);
   pendingServices = signal<ContractedServiceItem[]>([]);
   openIncidents = signal<number>(0);
 
-  isLoading = signal<boolean>(true);
-  
+  isLoadingAccessLogs = signal<boolean>(true);
+  isLoadingResidents = signal<boolean>(true);
+  isLoadingIncidentStats = signal<boolean>(true);
+  isLoadingServices = signal<boolean>(true);
+
   incidentStatusStats = signal({
     open: 0,
     viewed: 0,
@@ -49,7 +52,7 @@ fetchAccessLogs(): void {
 
         next:(response)=>{
           this.accessLogsList.set(response.data);
-          this.isLoading.set(false);
+          this.isLoadingAccessLogs.set(false);
 
         },
 
@@ -60,7 +63,7 @@ fetchAccessLogs(): void {
             error
           );
 
-          this.isLoading.set(false);
+          this.isLoadingAccessLogs.set(false);
 
         }
 
@@ -103,6 +106,7 @@ const stats = response.data.reduce(
 
       this.incidentStatusStats.set(stats);
       this.openIncidents.set(stats.open);
+      this.isLoadingIncidentStats.set(false);
     },
 
     error: (error) => {
@@ -110,6 +114,8 @@ const stats = response.data.reduce(
         'Error cargando incidencias del dashboard:',
         error
       );
+
+      this.isLoadingIncidentStats.set(false);
     }
   });
 }
@@ -118,6 +124,7 @@ fetchResidents(): void {
   this.userService.getResidents().subscribe({
     next: (response) => {
       this.residents.set(response.data);
+      this.isLoadingResidents.set(false);
     },
 
     error: (error) => {
@@ -125,6 +132,8 @@ fetchResidents(): void {
         'Error cargando residentes del dashboard:',
         error
       );
+
+      this.isLoadingResidents.set(false);
     }
   });
 }
@@ -140,6 +149,7 @@ fetchPendingServices(): void {
       );
 
       this.pendingServices.set(pending);
+      this.isLoadingServices.set(false);
     },
 
     error: (error) => {
@@ -147,6 +157,8 @@ fetchPendingServices(): void {
         'Error cargando servicios pendientes:',
         error
       );
+
+      this.isLoadingServices.set(false);
     }
   });
 }

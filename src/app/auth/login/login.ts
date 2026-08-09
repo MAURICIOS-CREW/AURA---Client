@@ -1,13 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, SpinnerComponent],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
@@ -18,6 +19,7 @@ export class Login {
   private router = inject(Router);
 
   errorMessage = '';
+  isSubmitting = signal(false);
 
   loginForm = this.fb.group({
     login: ['', Validators.required],
@@ -28,12 +30,14 @@ export class Login {
 
     this.errorMessage = '';
 
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid || this.isSubmitting()) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
     const { login, password } = this.loginForm.getRawValue();
+
+    this.isSubmitting.set(true);
 
     this.authService.login(login!, password!).subscribe({
 
@@ -52,6 +56,8 @@ export class Login {
         this.errorMessage =
           err.error?.error ??
           'Ocurrió un error inesperado. Intenta nuevamente.';
+
+        this.isSubmitting.set(false);
 
       }
 

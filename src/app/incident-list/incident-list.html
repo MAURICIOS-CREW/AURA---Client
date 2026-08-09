@@ -23,6 +23,7 @@
                 id="reporter_user_id"
                 name="reporter_user_id"
                 [(ngModel)]="reporterUserId"
+                [disabled]="isSubmitting()"
             >
                 <option value="">Selecciona un residente</option>
 
@@ -41,6 +42,7 @@
             id="title"
             name="title"
             [(ngModel)]="title"
+            [disabled]="isSubmitting()"
             placeholder="Título de la incidencia">
         </div>
 
@@ -51,6 +53,7 @@
             name="description"
             rows="4"
             [(ngModel)]="description"
+            [disabled]="isSubmitting()"
             placeholder="¿Qué paso?..."></textarea>
         </div>
 
@@ -60,6 +63,7 @@
             id="status"
             name="status"
             [(ngModel)]="status"
+            [disabled]="isSubmitting()"
             >
             <option value="">Selecciona un estado</option>
             <option value="open">Abierto</option>
@@ -69,9 +73,28 @@
             </select>
         </div>
 
-        <button type="submit" class="btn-primary incident">
-        <span class="material-symbols-outlined">save</span>
-        Registrar incidencia
+        @if (successMessage) {
+            <div class="form-feedback success aura-row-enter">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ successMessage }}
+            </div>
+        }
+
+        @if (errorMessage) {
+            <div class="form-feedback error aura-row-enter">
+                <span class="material-symbols-outlined">error</span>
+                {{ errorMessage }}
+            </div>
+        }
+
+        <button type="submit" class="btn-primary incident" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+            <app-spinner variant="light" />
+            Registrando...
+        } @else {
+            <span class="material-symbols-outlined">save</span>
+            Registrar incidencia
+        }
         </button>
     </form>
     </div>
@@ -104,16 +127,20 @@
 
         <tbody>
             @if (isLoading()) {
-                            <tr>
-                            <td colspan="6" class="text-center py-4">Cargando Incidencias...</td>
-                            </tr>
+                            @for (row of [0,1,2,3,4]; track row) {
+                                <tr>
+                                    @for (col of [0,1,2,3]; track col) {
+                                        <td><div class="skeleton-text"></div></td>
+                                    }
+                                </tr>
+                            }
                         } @else if (incidentsList().length === 0) {
                             <tr>
                             <td colspan="6" class="text-center py-4">No hay incidencias registradas.</td>
                             </tr>
                         } @else {
-                            @for (item of incidentsList(); track item.id) {
-                            <tr (click)="openIncidentModal(item)" class="incident-row">
+                            @for (item of incidentsList(); track item.id; let i = $index) {
+                            <tr (click)="openIncidentModal(item)" class="incident-row aura-row-enter" [style.--i]="i">
                                 <td>{{ item.created_at | date:'dd MMM yyyy · HH:mm' }}</td>
                                 <td>{{ item.title || 'Servicio General' }}</td>
                                 <td>{{ item.description || 'Sin descripción' }}</td>

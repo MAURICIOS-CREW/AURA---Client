@@ -1,25 +1,27 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { IncidentService, IncidentServiceItem } from '../services/incident.service';
 import { ModalComponent } from '../shared/components/modal/modal';
 import { IncidentDetail } from '../incident-detail/incident-detail';
 import { UserService, Resident } from '../services/user.service';
 import { FormsModule } from '@angular/forms';
+import { SpinnerComponent } from '../shared/components/spinner/spinner';
 
 @Component({
   selector: 'app-list-of-services',
   standalone: true,
-  imports: [CommonModule, DatePipe, ModalComponent, IncidentDetail, FormsModule],
+  imports: [CommonModule, DatePipe, ModalComponent, IncidentDetail, FormsModule, SpinnerComponent],
   templateUrl: './incident-list.html',
   styleUrl: './incident-list.scss'
 })
-export class IncidentList implements OnInit {
+export class IncidentList implements OnInit, OnDestroy {
   private incidentService = inject(IncidentService);
   private userService = inject(UserService);
 
-  residentsList = signal<Resident[]>([]); 
+  residentsList = signal<Resident[]>([]);
   incidentsList = signal<IncidentServiceItem[]>([]);
   isLoading = signal<boolean>(true);
+  isSubmitting = signal<boolean>(false);
 
   reporterUserId: number | null = null;
   title: string = '';
@@ -27,6 +29,8 @@ export class IncidentList implements OnInit {
   status: string = '';
 
   successMessage: string = '';
+  errorMessage: string = '';
+  private successTimeoutId: any = null;
 
   selectedIncident = signal<IncidentServiceItem | null>(null);
   showIncidentModal = signal<boolean>(false);
@@ -34,6 +38,12 @@ export class IncidentList implements OnInit {
   ngOnInit(): void {
     this.fetchIncidents();
     this.fetchResidents();
+}
+
+ngOnDestroy(): void {
+  if (this.successTimeoutId) {
+    clearTimeout(this.successTimeoutId);
+  }
 }
 
 fetchIncidents(): void {
@@ -146,18 +156,39 @@ createIncidentPayload() {
 }
 
 onSubmit(): void {
+  if (this.isSubmitting()) {
+    return;
+  }
+
+  if (this.successTimeoutId) {
+    clearTimeout(this.successTimeoutId);
+  }
+
+  this.successMessage = '';
+  this.errorMessage = '';
+  this.isSubmitting.set(true);
+
   const payload = this.createIncidentPayload();
 
   this.incidentService.createIncident(payload).subscribe({
     next: (response) => {
       console.log('Incidencia creada correctamente:', response);
 
+      this.isSubmitting.set(false);
       this.successMessage = 'Incidencia registrada correctamente.';
       this.resetForm();
       this.fetchIncidents();
+
+      this.successTimeoutId = setTimeout(() => {
+        this.successMessage = '';
+      }, 3500);
     },
     error: (err) => {
       console.error('Error al crear la incidencia:', err);
+
+      this.isSubmitting.set(false);
+      this.errorMessage =
+        err.error?.error ?? 'No se pudo registrar la incidencia. Intenta nuevamente.';
     }
   });
 }

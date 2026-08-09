@@ -39,22 +39,40 @@
             </tr>
           </thead>
           <tbody>
-            @for (resident of residents(); track resident.id) {
+            @if (isLoading()) {
+              @for (row of [0,1,2,3,4]; track row) {
+                <tr>
+                  @for (col of [0,1,2,3,4,5]; track col) {
+                    <td><div class="skeleton-text"></div></td>
+                  }
+                </tr>
+              }
+            } @else if (loadError()) {
               <tr>
-                <td>{{ resident.id }}</td>
-                <td>{{ resident.name }}</td>
-                <td>{{ resident.username }}</td>
-                <td>{{ resident.email }}</td>
-                <td>{{ resident.phone }}</td>
-                <td>
-                  <span
-                    class="badge active"
-                    [class.inactive]="!resident.is_active"
-                  >
-                    {{ resident.is_active ? 'Activo' : 'Inactivo' }}
-                  </span>
-                </td>
+                <td colspan="6" class="text-center py-4">{{ loadError() }}</td>
               </tr>
+            } @else if (residents().length === 0) {
+              <tr>
+                <td colspan="6" class="text-center py-4">No hay residentes registrados.</td>
+              </tr>
+            } @else {
+              @for (resident of residents(); track resident.id; let i = $index) {
+                <tr class="aura-row-enter" [style.--i]="i">
+                  <td>{{ resident.id }}</td>
+                  <td>{{ resident.name }}</td>
+                  <td>{{ resident.username }}</td>
+                  <td>{{ resident.email }}</td>
+                  <td>{{ resident.phone }}</td>
+                  <td>
+                    <span
+                      class="badge active"
+                      [class.inactive]="!resident.is_active"
+                    >
+                      {{ resident.is_active ? 'Activo' : 'Inactivo' }}
+                    </span>
+                  </td>
+                </tr>
+              }
             }
           </tbody>
         </table>

@@ -27,7 +27,8 @@
             id="login"
             class="aura-input"
             placeholder="Usuario o correo electrónico"
-            formControlName="login">
+            formControlName="login"
+            [attr.disabled]="isSubmitting() ? true : null">
         </div>
 
         <div class="form-group">
@@ -41,11 +42,12 @@
             id="password"
             class="aura-input"
             placeholder="••••••••"
-            formControlName="password">
+            formControlName="password"
+            [attr.disabled]="isSubmitting() ? true : null">
         </div>
 
         @if (errorMessage) {
-          <div class="login-error">
+          <div class="login-error aura-row-enter">
             <span class="material-symbols-outlined">error</span>
             {{ errorMessage }}
           </div>
@@ -54,10 +56,15 @@
         <button
           type="submit"
           class="btn-action vehicle login-btn"
-          [disabled]="loginForm.invalid">
+          [disabled]="loginForm.invalid || isSubmitting()">
 
-          <span class="material-symbols-outlined">login</span>
-          Iniciar Sesión
+          @if (isSubmitting()) {
+            <app-spinner variant="light" />
+            Iniciando sesión...
+          } @else {
+            <span class="material-symbols-outlined">login</span>
+            Iniciar Sesión
+          }
 
         </button>
 

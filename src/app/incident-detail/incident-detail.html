@@ -16,6 +16,7 @@
         class="status-select"
         [value]="selectedStatus()"
         (change)="selectedStatus.set($any($event.target).value)"
+        [disabled]="isSavingStatus()"
         >
         <option value="open">Abierto</option>
         <option value="viewed">Visto</option>
@@ -27,12 +28,27 @@
         <button
         type="button"
         class="save-status-button"
+        [class.is-saved]="statusSaved()"
+        [disabled]="isSavingStatus()"
         (click)="saveStatus()"
         >
-        Guardar estado
+        @if (isSavingStatus()) {
+          <app-spinner variant="light" /> Guardando...
+        } @else if (statusSaved()) {
+          <span class="material-symbols-outlined">check</span> Guardado
+        } @else {
+          Guardar estado
+        }
         </button>
 
     </div>
+
+    @if (statusError()) {
+      <div class="incident-detail__inline-error aura-row-enter">
+        <span class="material-symbols-outlined">error</span>
+        {{ statusError() }}
+      </div>
+    }
 
 
     <div class="incident-detail__info">
@@ -91,10 +107,23 @@
         </span>
     </div>
     
-    @if (comments().length > 0) {
+    @if (isLoadingComments()) {
         <div class="incident-detail__comments-list">
-        @for (comment of comments(); track comment.id) {
+        @for (row of [0,1]; track row) {
             <article class="incident-detail__comment">
+            <div class="incident-detail__comment-header">
+                <div class="skeleton-text" style="width: 110px;"></div>
+                <div class="skeleton-text" style="width: 70px;"></div>
+            </div>
+            <div class="skeleton-text" style="max-width: 100%;"></div>
+            </article>
+        }
+        </div>
+
+    } @else if (comments().length > 0) {
+        <div class="incident-detail__comments-list">
+        @for (comment of comments(); track comment.id; let i = $index) {
+            <article class="incident-detail__comment aura-row-enter" [style.--i]="i">
             <div class="incident-detail__comment-header">
                 <strong>
                 {{ comment.user?.name || 'Usuario desconocido' }}
@@ -130,8 +159,16 @@
             rows="4"
             placeholder="Escribe un comentario..."
             [value]="commentContent()"
+            [disabled]="isAddingComment()"
             (input)="commentContent.set($any($event.target).value)"
         ></textarea>
+
+        @if (commentError()) {
+          <div class="incident-detail__inline-error aura-row-enter">
+            <span class="material-symbols-outlined">error</span>
+            {{ commentError() }}
+          </div>
+        }
 
         <div class="incident-detail__comment-form-footer">
 
@@ -142,10 +179,14 @@
            <button
             type="button"
             class="incident-detail__comment-button"
-            [disabled]="!commentContent().trim()"
+            [disabled]="!commentContent().trim() || isAddingComment()"
             (click)="addComment()"
             >
-            Enviar comentario
+            @if (isAddingComment()) {
+              <app-spinner variant="light" /> Enviando...
+            } @else {
+              Enviar comentario
+            }
             </button>
         </div>
 

@@ -203,16 +203,20 @@
                     
                     <tbody>
                        @if (isLoading()) {
-                            <tr>
-                            <td colspan="6" class="text-center py-4">Cargando servicios...</td>
-                            </tr>
+                            @for (row of [0,1,2,3,4]; track row) {
+                                <tr>
+                                    @for (col of [0,1,2,3,4,5]; track col) {
+                                        <td><div class="skeleton-text"></div></td>
+                                    }
+                                </tr>
+                            }
                         } @else if (servicesList().length === 0) {
                             <tr>
                             <td colspan="6" class="text-center py-4">No hay servicios registrados.</td>
                             </tr>
                         } @else {
-                            @for (item of servicesList(); track item.id) {
-                            <tr>
+                            @for (item of servicesList(); track item.id; let i = $index) {
+                            <tr class="aura-row-enter" [style.--i]="i">
                                 <td>{{ item.created_at | date:'dd MMM yyyy · HH:mm' }}</td>
                                 <td>{{ item.user?.name || 'N/A' }}</td>
                                 <td>{{ item.service?.title || 'Servicio General' }}</td>

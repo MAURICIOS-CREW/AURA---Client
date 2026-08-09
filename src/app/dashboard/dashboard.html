@@ -13,8 +13,12 @@
         </div>
         <div class="card-info">
           <h3>Residentes Registrados</h3>
-          <div class="card-value">{{ residents().length }}</div>
-          <div class="card-trend positive">+2 este mes</div>
+          @if (isLoadingResidents()) {
+            <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 60px;"></div>
+          } @else {
+            <div class="card-value aura-row-enter">{{ residents().length }}</div>
+            <div class="card-trend positive aura-row-enter" style="--i: 1">+2 este mes</div>
+          }
         </div>
       </div>
     </div>
@@ -26,8 +30,12 @@
         </div>
         <div class="card-info">
           <h3>Incidencias abiertas</h3>
-          <div class="card-value">{{ openIncidents() }}</div>
-          <div class="card-trend negative">-4 vs ayer</div>
+          @if (isLoadingIncidentStats()) {
+            <div class="card-value skeleton-text" style="height: 1.9rem; max-width: 60px;"></div>
+          } @else {
+            <div class="card-value aura-row-enter">{{ openIncidents() }}</div>
+            <div class="card-trend negative aura-row-enter" style="--i: 1">-4 vs ayer</div>
+          }
         </div>
       </div>
     </div>
@@ -57,8 +65,39 @@
 
     <div class="card-body">
 
+      @if (isLoadingIncidentStats()) {
+        <div class="incident-chart">
+          <div class="chart-bars">
+            @for (col of [0,1,2,3]; track col) {
+              <div class="chart-column">
+                <div class="skeleton-text" style="height: 1rem; width: 24px;"></div>
+                <div class="skeleton-block" style="height: 80px; width: 32px; border-radius: 8px;"></div>
+                <div class="skeleton-text" style="height: 0.8rem; width: 50px;"></div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <table class="aura-table">
+          <thead>
+            <tr>
+              <th>Estatus</th>
+              <th>Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of [0,1,2,3]; track row) {
+              <tr>
+                <td><div class="skeleton-text" style="width: 90px;"></div></td>
+                <td><div class="skeleton-text" style="width: 30px;"></div></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+
       <!-- Gráfica de incidencias por estatus -->
-      <div class="incident-chart">
+      <div class="incident-chart aura-row-enter">
         <div class="chart-bars">
           <!-- Abierto -->
           <div class="chart-column">
@@ -163,6 +202,8 @@
         </tbody>
       </table>
 
+      }
+
     </div>
 
   </div>
@@ -195,7 +236,18 @@
 
           <tbody>
 
-            @if (pendingServices().length === 0) {
+            @if (isLoadingServices()) {
+
+              @for (row of [0,1,2]; track row) {
+                <tr>
+                  <td><div class="skeleton-text"></div></td>
+                  <td><div class="skeleton-text"></div></td>
+                  <td><div class="skeleton-text"></div></td>
+                  <td><div class="skeleton-text" style="width: 70px;"></div></td>
+                </tr>
+              }
+
+            } @else if (pendingServices().length === 0) {
 
               <tr>
                 <td colspan="4" class="text-center py-4">
@@ -205,8 +257,8 @@
 
             } @else {
 
-              @for (item of pendingServices(); track item.id) {
-                <tr>
+              @for (item of pendingServices(); track item.id; let i = $index) {
+                <tr class="aura-row-enter" [style.--i]="i">
                   <td>
                     {{ item.created_at | date:'dd MMM yyyy · HH:mm' }}
                   </td>
@@ -258,12 +310,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (isLoading()) {
-                                <tr>
-                                    <td colspan="5" class="text-center py-4">
-                                        Cargando todos los accesos al residencial...
-                                    </td>
-                                </tr>
+                            @if (isLoadingAccessLogs()) {
+                                @for (row of [0,1,2,3,4]; track row) {
+                                    <tr>
+                                        @for (col of [0,1,2,3,4,5,6]; track col) {
+                                            <td><div class="skeleton-text"></div></td>
+                                        }
+                                    </tr>
+                                }
                             } @else if (accessLogsList().length === 0) {
                                 <tr>
                                     <td colspan="5" class="text-center py-4">
@@ -271,8 +325,8 @@
                                     </td>
                                 </tr>
                             } @else {
-                                @for (item of accessLogsList(); track item.id) {
-                                    <tr>
+                                @for (item of accessLogsList(); track item.id; let i = $index) {
+                                    <tr class="aura-row-enter" [style.--i]="i">
                                         <td> {{ item.timestamp | date:'dd MMM yyyy · HH:mm' }} </td>
                                         <td>
                                             <span [class]="'badge ' + getAccessTypeClass(item.access_type || '')">
@@ -292,7 +346,7 @@
                                     </tr>
                                 }
                             }
-                        </tbody>  
+                        </tbody>
                     </table>
                 </div>
             </div>

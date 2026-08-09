@@ -130,7 +130,15 @@
   box-shadow: 0 0 0 3px rgba(25, 84, 145, 0.12);
 }
 
+.status-select:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 .save-status-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   align-self: flex-start;
   padding: 0.6rem 1rem;
   border: none;
@@ -141,14 +149,43 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.1s ease;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
 }
 
-.save-status-button:hover {
+.save-status-button:hover:not(:disabled) {
   background: #3d92d5;
 }
 
-.save-status-button:active {
+.save-status-button:active:not(:disabled) {
   transform: translateY(1px);
+}
+
+.save-status-button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.save-status-button.is-saved {
+  background: #15803d;
+}
+
+.incident-detail__inline-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  background: rgba(220, 53, 69, 0.12);
+  color: #b42318;
+  font-size: 0.82rem;
+  font-weight: 500;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
 }
 
 .incident-detail__comments {
@@ -305,6 +342,12 @@
   box-shadow: 0 0 0 3px rgba(25, 84, 145, 0.12);
 }
 
+.incident-detail__comment-input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  background: #f1f5f9;
+}
+
 
 .incident-detail__comment-form-footer {
   display: flex;
@@ -321,6 +364,9 @@
 
 
 .incident-detail__comment-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 0.6rem 1rem;
   border: none;
   border-radius: 8px;

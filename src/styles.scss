@@ -9,3 +9,77 @@ html, body {
 *, *:before, *:after {
   box-sizing: inherit;
 }
+
+/* ==========================================
+   AURA - SISTEMA COMPARTIDO DE LOADERS
+   Utilidades globales de skeleton + animaciones
+   de entrada, usadas por todas las vistas.
+   ========================================== */
+
+.skeleton-text,
+.skeleton-block,
+.skeleton-circle {
+  display: inline-block;
+  border-radius: 6px;
+  background: linear-gradient(
+    100deg,
+    #eef2f7 30%,
+    #f8fafc 50%,
+    #eef2f7 70%
+  );
+  background-size: 200% 100%;
+  animation: aura-shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-text {
+  height: 14px;
+  width: 100%;
+  max-width: 140px;
+}
+
+.skeleton-block {
+  height: 100%;
+  width: 100%;
+  min-height: 16px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+@keyframes aura-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.aura-row-enter {
+  animation: aura-row-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+@keyframes aura-row-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-text,
+  .skeleton-block,
+  .skeleton-circle {
+    animation: none;
+    background: #eef2f7;
+  }
+
+  .aura-row-enter {
+    animation: none;
+  }
+}

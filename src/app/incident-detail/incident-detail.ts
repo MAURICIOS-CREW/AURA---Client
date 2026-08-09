@@ -1,19 +1,20 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import {
   IncidentService,
   IncidentServiceItem,
   IncidentComment
 } from '../services/incident.service';
+import { SpinnerComponent } from '../shared/components/spinner/spinner';
 
 @Component({
   selector: 'app-incident-detail',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, SpinnerComponent],
   templateUrl: './incident-detail.html',
   styleUrl: './incident-detail.scss',
 })
-export class IncidentDetail {
+export class IncidentDetail implements OnDestroy {
 
   private incidentService = inject(IncidentService);
 
@@ -22,6 +23,15 @@ export class IncidentDetail {
 
   comments = signal<IncidentComment[]>([]);
   commentContent = signal('');
+  isLoadingComments = signal(false);
+
+  isSavingStatus = signal(false);
+  statusSaved = signal(false);
+  statusError = signal('');
+  private statusSavedTimeoutId: any = null;
+
+  isAddingComment = signal(false);
+  commentError = signal('');
 
   statusUpdated = output<{
     id: number;
@@ -32,15 +42,20 @@ export class IncidentDetail {
     effect(() => {
       const currentIncident = this.incident();
 
+      this.comments.set([]);
+      this.statusError.set('');
+      this.commentError.set('');
+
       if (currentIncident) {
         this.selectedStatus.set(currentIncident.status);
+        this.isLoadingComments.set(true);
 
         this.incidentService
           .getIncidentComments(currentIncident.id)
           .subscribe({
             next: (comments) => {
               this.comments.set(comments);
-              console.log('Comentarios:', comments);
+              this.isLoadingComments.set(false);
             },
 
             error: (error) => {
@@ -48,6 +63,8 @@ export class IncidentDetail {
                 'Error al obtener comentarios:',
                 error
               );
+
+              this.isLoadingComments.set(false);
             }
           });
       }
@@ -57,9 +74,16 @@ export class IncidentDetail {
   saveStatus(): void {
     const currentIncident = this.incident();
 
-    if (!currentIncident) {
+    if (!currentIncident || this.isSavingStatus()) {
       return;
     }
+
+    if (this.statusSavedTimeoutId) {
+      clearTimeout(this.statusSavedTimeoutId);
+    }
+
+    this.statusError.set('');
+    this.isSavingStatus.set(true);
 
     this.incidentService
       .updateIncidentStatus(
@@ -73,7 +97,12 @@ export class IncidentDetail {
             status: this.selectedStatus()
           });
 
-          console.log('Estado actualizado correctamente');
+          this.isSavingStatus.set(false);
+          this.statusSaved.set(true);
+
+          this.statusSavedTimeoutId = setTimeout(() => {
+            this.statusSaved.set(false);
+          }, 1600);
         },
 
         error: (error) => {
@@ -81,6 +110,9 @@ export class IncidentDetail {
             'Error al actualizar el estado:',
             error
           );
+
+          this.isSavingStatus.set(false);
+          this.statusError.set('No se pudo actualizar el estado. Intenta nuevamente.');
         }
       });
   }
@@ -89,9 +121,12 @@ export class IncidentDetail {
   const currentIncident = this.incident();
   const content = this.commentContent().trim();
 
-  if (!currentIncident || !content) {
+  if (!currentIncident || !content || this.isAddingComment()) {
     return;
   }
+
+  this.commentError.set('');
+  this.isAddingComment.set(true);
 
   this.incidentService
     .addIncidentComment(currentIncident.id, content)
@@ -103,8 +138,7 @@ export class IncidentDetail {
         ]);
 
         this.commentContent.set('');
-
-        console.log('Comentario agregado correctamente');
+        this.isAddingComment.set(false);
       },
 
       error: (error) => {
@@ -112,9 +146,18 @@ export class IncidentDetail {
           'Error al agregar comentario:',
           error
         );
+
+        this.isAddingComment.set(false);
+        this.commentError.set('No se pudo agregar el comentario. Intenta nuevamente.');
       }
     });
 }
+
+  ngOnDestroy(): void {
+    if (this.statusSavedTimeoutId) {
+      clearTimeout(this.statusSavedTimeoutId);
+    }
+  }
 
   getStatusClass(status: string): string {
     switch (status) {
