@@ -198,14 +198,9 @@ li {
   white-space: nowrap;
 }
 
-.badge-paid {
+.badge-completed {
   background:#dcfce7;
   color:#15803d;
-}
-
-.badge-pending {
-  background:#fef3c7;
-  color:#e0bb40;
 }
 
 .badge-in-progress {
@@ -331,7 +326,7 @@ li {
 
   transition: .25s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: #0D2B52;
     transform: translateY(-2px);
   }
@@ -339,4 +334,266 @@ li {
   span {
     font-size: 20px;
   }
+
+  &:disabled {
+    opacity: .7;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: #fff;
+  color: #475569;
+  border: 1px solid #dbe4ee;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .25s;
+
+  &:hover:not(:disabled) {
+    background: #f8fbff;
+    border-color: #2E6DB4;
+    color: #195491;
+  }
+
+  &:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-reject {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s ease;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    background: #dc2626;
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+  }
+}
+
+/* ===========================
+   FORMULARIOS (modales de catálogo / asignación)
+=========================== */
+
+.aura-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: .9rem;
+    font-weight: 600;
+    color: #195491;
+  }
+
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dbe4ee;
+    border-radius: 10px;
+    background: #fff;
+    font-size: .95rem;
+    color: #333;
+    transition: .25s;
+    outline: none;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: #195491;
+      box-shadow: 0 0 0 3px rgba(25, 84, 145, .12);
+    }
+
+    &:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+      background: #f1f5f9;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+}
+
+.checkbox-group {
+  label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    width: auto;
+    accent-color: #195491;
+  }
+}
+
+.form-feedback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+
+  &.success {
+    background: rgba(21, 128, 61, 0.12);
+    color: #15803d;
+  }
+
+  &.error {
+    background: rgba(220, 53, 69, 0.12);
+    color: #b42318;
+  }
+}
+
+.catalog-image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+  }
+}
+
+/* ===========================
+   TARJETAS DE CATÁLOGO
+=========================== */
+
+.card-inactive {
+  opacity: .65;
+}
+
+.card-info-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-tools {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #475569;
+  cursor: pointer;
+  transition: .2s ease;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:hover {
+    background: #e2e8f0;
+    color: #195491;
+  }
+
+  &.danger:hover {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+}
+
+.inactive-badge {
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+.empty-catalog {
+  grid-column: 1 / -1;
+}
+
+/* ===========================
+   TABLA DE CONTRATACIONES
+=========================== */
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.priority-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .15);
+}
+
+.badge-created {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.badge-scheduled {
+  background-color: #dbeafe;
+  color: #195491;
 }

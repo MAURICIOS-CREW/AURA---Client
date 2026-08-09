@@ -159,14 +159,14 @@
                 </tr>
               } @else {
                 @for (transfer of pendingTransfers(); track transfer.id; let i = $index) {
-                  <tr class="aura-row-enter" [style.--i]="i">
+                  <tr class="aura-row-enter clickable-row" [style.--i]="i" (click)="openTransferDetail(transfer)">
                     <td>{{ transfer.created_at | date:'dd MMM yyyy · HH:mm' }}</td>
                     <td>{{ transfer.user?.name || 'Residente' }}</td>
                     <td>{{ transferConcept(transfer) }}</td>
                     <td class="amount positive">{{ transfer.amount | currency }}</td>
                     <td>
                       @if (transfer.receipt_url) {
-                        <a [href]="transfer.receipt_url" target="_blank" rel="noopener" class="receipt-link">
+                        <a [href]="transfer.receipt_url" target="_blank" rel="noopener" class="receipt-link" (click)="$event.stopPropagation()">
                           <span class="material-symbols-outlined">receipt_long</span> Ver
                         </a>
                       } @else {
@@ -175,10 +175,10 @@
                     </td>
                     <td>
                       <div class="transfer-actions">
-                        <button type="button" class="btn-approve" (click)="askApproveTransfer(transfer)">
+                        <button type="button" class="btn-approve" (click)="$event.stopPropagation(); askApproveTransfer(transfer)">
                           <span class="material-symbols-outlined">check</span> Aprobar
                         </button>
-                        <button type="button" class="btn-reject" (click)="askRejectTransfer(transfer)">
+                        <button type="button" class="btn-reject" (click)="$event.stopPropagation(); askRejectTransfer(transfer)">
                           <span class="material-symbols-outlined">close</span> Rechazar
                         </button>
                       </div>
@@ -386,7 +386,7 @@
                           </tr>
                       } @else {
                           @for (movement of movements(); track movement.id; let i = $index) {
-                              <tr class="aura-row-enter" [style.--i]="i">
+                              <tr class="aura-row-enter clickable-row" [style.--i]="i" (click)="openMovementDetail(movement)">
                                   <td>{{ movement.date | date:'dd MMM yyyy' }}</td>
                                   <td>{{ movement.concept }}</td>
                                   <td>{{ movement.counterpart }}</td>
@@ -461,6 +461,188 @@
             <span class="material-symbols-outlined">close</span> Sí, rechazar
           }
         </button>
+      </div>
+    </app-modal>
+
+    <app-modal
+      [isOpen]="movementDetail() !== null || isLoadingMovementDetail()"
+      title="Detalle del movimiento"
+      icon="receipt_long"
+      maxWidth="640px"
+      (closed)="closeMovementDetail()"
+    >
+      <div modal-body>
+        @if (isLoadingMovementDetail()) {
+          <div class="movement-detail__loading">
+            <app-spinner variant="primary" />
+            <span>Cargando detalle...</span>
+          </div>
+        } @else if (movementDetailError()) {
+          <div class="form-feedback error aura-row-enter">
+            <span class="material-symbols-outlined">error</span>
+            {{ movementDetailError() }}
+          </div>
+        } @else if (movementDetail(); as detail) {
+
+          @if (detail.kind === 'payment' && detail.payment; as payment) {
+            <div class="movement-detail">
+              <div class="movement-detail__grid">
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Residente</span>
+                  <strong>{{ payment.user?.name || 'Residente' }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Concepto</span>
+                  <strong>{{ transferConcept(payment) }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Monto</span>
+                  <strong>{{ payment.amount | currency }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Método de pago</span>
+                  <strong class="capitalize">{{ payment.payment_method }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Fecha</span>
+                  <strong>{{ payment.created_at | date:'dd MMM yyyy · HH:mm' }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Estado</span>
+                  <span [class]="'badge ' + getMovementStatusClass(payment.status)">
+                    {{ getMovementStatusLabel(payment.status) }}
+                  </span>
+                </div>
+                @if (payment.validator_admin) {
+                  <div class="movement-detail__item">
+                    <span class="movement-detail__label">Validado por</span>
+                    <strong>{{ payment.validator_admin.name }}</strong>
+                  </div>
+                }
+              </div>
+
+              <div class="movement-detail__receipt">
+                <span class="movement-detail__label">Comprobante</span>
+
+                @if (payment.receipt_url) {
+                  <div class="receipt-image-wrapper">
+                    @if (isReceiptImageLoading()) {
+                      <div class="receipt-image-loading">
+                        <app-spinner variant="primary" />
+                      </div>
+                    }
+                    @if (!isReceiptImageBroken()) {
+                      <img
+                        [src]="payment.receipt_url"
+                        alt="Comprobante de transferencia"
+                        class="receipt-image"
+                        [class.is-loading]="isReceiptImageLoading()"
+                        (load)="onReceiptImageLoad()"
+                        (error)="onReceiptImageError()"
+                      >
+                    } @else {
+                      <div class="receipt-placeholder">
+                        <span class="material-symbols-outlined">broken_image</span>
+                        No se pudo cargar el comprobante.
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="receipt-placeholder">
+                    <span class="material-symbols-outlined">image_not_supported</span>
+                    Comprobante no disponible.
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          @if (detail.kind === 'expense' && detail.expense; as expense) {
+            <div class="movement-detail">
+              <div class="movement-detail__grid">
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Concepto</span>
+                  <strong>{{ expense.concept }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Categoría</span>
+                  <strong class="capitalize">{{ expense.category }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Monto</span>
+                  <strong>{{ expense.amount | currency }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Proveedor</span>
+                  <strong>{{ expense.provider || 'No especificado' }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Fecha</span>
+                  <strong>{{ expense.expense_date | date:'dd MMM yyyy' }}</strong>
+                </div>
+                <div class="movement-detail__item">
+                  <span class="movement-detail__label">Estado</span>
+                  <span [class]="'badge ' + getMovementStatusClass(expense.status)">
+                    {{ getMovementStatusLabel(expense.status) }}
+                  </span>
+                </div>
+              </div>
+
+              @if (expense.description) {
+                <div class="movement-detail__description">
+                  <span class="movement-detail__label">Descripción</span>
+                  <p>{{ expense.description }}</p>
+                </div>
+              }
+
+              <div class="movement-detail__receipt">
+                <span class="movement-detail__label">Comprobante</span>
+
+                @if (expense.receipt_url) {
+                  <div class="receipt-image-wrapper">
+                    @if (isReceiptImageLoading()) {
+                      <div class="receipt-image-loading">
+                        <app-spinner variant="primary" />
+                      </div>
+                    }
+                    @if (!isReceiptImageBroken()) {
+                      <img
+                        [src]="expense.receipt_url"
+                        alt="Comprobante de egreso"
+                        class="receipt-image"
+                        [class.is-loading]="isReceiptImageLoading()"
+                        (load)="onReceiptImageLoad()"
+                        (error)="onReceiptImageError()"
+                      >
+                    } @else {
+                      <div class="receipt-placeholder">
+                        <span class="material-symbols-outlined">broken_image</span>
+                        No se pudo cargar el comprobante.
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="receipt-placeholder">
+                    <span class="material-symbols-outlined">image_not_supported</span>
+                    Comprobante no disponible.
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+        }
+      </div>
+
+      <div modal-footer>
+        @if (movementDetail()?.kind === 'payment' && canReviewTransfer(movementDetail()!.payment!)) {
+          <button type="button" class="btn-reject" (click)="rejectFromDetail(movementDetail()!.payment!)">
+            <span class="material-symbols-outlined">close</span> Rechazar
+          </button>
+          <button type="button" class="btn-approve" (click)="approveFromDetail(movementDetail()!.payment!)">
+            <span class="material-symbols-outlined">check</span> Aprobar
+          </button>
+        }
       </div>
     </app-modal>
 </div>

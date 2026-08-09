@@ -4,7 +4,7 @@
         <h2>Gestor de Servicios</h2>
         <div class="header-actions">
             <app-report-generator reportType="services" variant="primary" label="Generar reporte" />
-            <button class="btn-primary">
+            <button class="btn-primary" (click)="openCreateCatalogModal()">
                 <span class="material-symbols-outlined">add</span>
                 Agregar Servicio
             </button>
@@ -18,159 +18,66 @@
 
 <div class="services-cards">
 
-    <!-- Mantenimiento -->
-    <div class="card">
-        <div class="card-content">
-            <div class="card-icon blue">
-                <span class="material-symbols-outlined">nature_people</span>
+    @if (isLoadingCatalog()) {
+        @for (row of [0,1,2]; track row) {
+            <div class="card">
+                <div class="card-content">
+                    <div class="skeleton-circle" style="width: 68px; height: 68px; border-radius: 15px;"></div>
+                    <div class="card-info">
+                        <div class="skeleton-text" style="width: 60%; height: 1.1rem;"></div>
+                        <div class="skeleton-text" style="width: 100%; margin-top: 12px;"></div>
+                        <div class="skeleton-text" style="width: 80%;"></div>
+                        <div class="skeleton-text" style="width: 40%; height: 1.3rem; margin-top: 12px;"></div>
+                    </div>
+                </div>
             </div>
-
-            <div class="card-info">
-                <h3>Mantenimiento Mensual</h3>
-                <p class="card-description">
-                    Servicios generales de mantenimiento preventivo y correctivo del residencial (Áreas Comunes).
-                </p>
-
-                <div class="card-price">$200 MXN</div>
-
-                <button class="service-btn">
-                    Asignar servicio
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Lavado de Alfombras y Muebles -->
-    <div class="card">
-        <div class="card-content">
-            <div class="card-icon purple">
-                <span class="material-symbols-outlined">cleaning</span>
-            </div>
-
-            <div class="card-info">
-                <h3>Lavado de Alfombras y Muebles</h3>
-                <p class="card-description">
-                    Limpieza a vapor con inyección y succión profunda para eliminación de manchas y ácaros.
-                </p>
-
-                <div class="card-price">$250 MXN</div>
-
-               <button class="service-btn">
-    <span class="material-symbols-outlined">handshake</span>
-    Contratar servicio
-</button>
+        }
+    } @else if (catalogList().length === 0) {
+        <div class="card-lg empty-catalog">
+            <div class="card-body text-center py-4">
+                No hay servicios en el catálogo todavía. Agrega el primero con "Agregar Servicio".
             </div>
         </div>
-    </div>
+    } @else {
+        @for (service of catalogList(); track service.id; let i = $index) {
+            <div class="card aura-row-enter" [style.--i]="i" [class.card-inactive]="!service.is_active">
+                <div class="card-content">
+                    <div class="card-icon" [class]="getCardColor(i)">
+                        <span class="material-symbols-outlined">home_repair_service</span>
+                    </div>
 
-    <div class="card">
-        <div class="card-content">
-            <div class="card-icon yellow">
-                <span class="material-symbols-outlined">propane</span>
+                    <div class="card-info">
+                        <div class="card-info-header">
+                            <h3>{{ service.title }}</h3>
+                            <div class="card-tools">
+                                <button type="button" class="icon-button" title="Editar" (click)="openEditCatalogModal(service)">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </button>
+                                <button type="button" class="icon-button danger" title="Eliminar" (click)="askDeleteCatalogService(service)">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        @if (!service.is_active) {
+                            <span class="badge badge-cancelled inactive-badge">Inactivo</span>
+                        }
+
+                        <p class="card-description">
+                            {{ service.description || 'Sin descripción disponible.' }}
+                        </p>
+
+                        <div class="card-price">{{ service.price | currency:'MXN':'symbol':'1.2-2' }}</div>
+
+                        <button class="service-btn" (click)="openAssignModal(service)">
+                            <span class="material-symbols-outlined">handshake</span>
+                            Asignar servicio
+                        </button>
+                    </div>
+                </div>
             </div>
-
-            <div class="card-info">
-                <h3>Limpieza Profunda de Cisterna y Aljibe</h3>
-                <p class="card-description">
-                    Vaciado, cepillado de paredes, desinfección con cloro de grado alimenticio y extracción de lodos.
-                </p>
-
-                <div class="card-price">Desde $500 MXN</div>
-
-                <button class="service-btn">
-                    <span class="material-symbols-outlined">handshake</span>
-                    Contratar servicio
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Jardinería -->
-    <div class="card">
-        <div class="card-content">
-            <div class="card-icon green">
-                <span class="material-symbols-outlined">home_and_garden</span>
-            </div>
-
-            <div class="card-info">
-                <h3>Jardinería y Poda de Césped</h3>
-                <p class="card-description">
-                    Servicio completo de corte de pasto, nivelación de jardín, corte de maleza y retiro de residuos verdes.
-                </p>
-
-                <div class="card-price">$250 MXN</div>
-
-                <button class="service-btn">
-                    <span class="material-symbols-outlined">handshake</span>
-                    Contratar servicio
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Aire Acondicionado -->
-    <div class="card">
-        <div class="card-content">
-            <div class="card-icon blue">
-                <span class="material-symbols-outlined">ac_unit</span>
-            </div>
-
-            <div class="card-info">
-                <h3>Mantenimiento de Aire Acondicionado</h3>
-                <p class="card-description">
-                   Revisión general, limpieza de filtros, desinfección de serpentín y recarga de gas refrigerante.
-                </p>
-                <div class="card-price">$450 MXN</div>
-
-                <button class="service-btn">
-                    <span class="material-symbols-outlined">handshake</span>
-                    Contratar servicio
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pintura y Retoque de Fachada -->
-    <div class="card">
-        <div class="card-content">
-            <div class="card-icon red">
-                <span class="material-symbols-outlined">format_paint</span>
-            </div>
-
-            <div class="card-info">
-                <h3>Pintura y Retoque de Fachada</h3>
-                <p class="card-description">
-                    Resane de grietas superficiales y aplicación de pintura vinílica impermeabilizante exterior.
-                </p>
-                <div class="card-price">$1200 MXN</div>
-                <button class="service-btn">
-                    <span class="material-symbols-outlined">handshake</span>
-                    Contratar servicio
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Plomería y Reparación de Fugas -->
-    <div class="card">
-        <div class="card-content">
-            <div class="card-icon blue">
-                <span class="material-symbols-outlined">water_pump</span>
-            </div>
-
-            <div class="card-info">
-                <h3>Plomería y Reparación de Fugas</h3>
-                <p class="card-description">
-                    Servicio técnico especializado para reparación de tuberías, cambio de llaves, sanitarios y tinacos.
-                </p>
-                <div class="card-price">$300 MXN</div>
-                <button class="service-btn">
-                    <span class="material-symbols-outlined">handshake</span>
-                    Contratar servicio
-                </button>
-            </div>
-        </div>
-    </div>
+        }
+    }
 
 </div>
 
@@ -185,7 +92,7 @@
                   </span>
                   <div>
                       <h3>Últimos Servicios Contratados</h3>
-                      <small>Registro de servicios contratados recientemente</small>
+                      <small>Los servicios sin horario asignado aparecen primero</small>
                   </div>
               </div>
           </div>
@@ -203,7 +110,7 @@
                             <th>Estado</th>
                         </tr>
                     </thead>
-                    
+
                     <tbody>
                        @if (isLoading()) {
                             @for (row of [0,1,2,3,4]; track row) {
@@ -213,24 +120,29 @@
                                     }
                                 </tr>
                             }
-                        } @else if (servicesList().length === 0) {
+                        } @else if (sortedServicesList().length === 0) {
                             <tr>
                             <td colspan="6" class="text-center py-4">No hay servicios registrados.</td>
                             </tr>
                         } @else {
-                            @for (item of servicesList(); track item.id; let i = $index) {
-                            <tr class="aura-row-enter" [style.--i]="i">
-                                <td>{{ item.created_at | date:'dd MMM yyyy · HH:mm' }}</td>
+                            @for (item of sortedServicesList(); track item.id; let i = $index) {
+                            <tr class="aura-row-enter clickable-row" [style.--i]="i" (click)="openDetailModal(item)">
+                                <td>
+                                    @if (needsSchedule(item)) {
+                                        <span class="priority-dot" title="Sin horario asignado"></span>
+                                    }
+                                    {{ item.created_at | date:'dd MMM yyyy · HH:mm' }}
+                                </td>
                                 <td>{{ item.user?.name || 'N/A' }}</td>
                                 <td>{{ item.service?.title || 'Servicio General' }}</td>
                                 <td>
                                     {{ item.residence?.address?.name || 'Sin dirección' }},
                                     CP {{ item.residence?.address?.cp || 'N/A' }}
                                 </td>
-                                <td>{{ item.financial_charge?.amount | currency:'MXN':'symbol':'1.2-2' }}</td>
+                                <td>{{ item.amount | currency:'MXN':'symbol':'1.2-2' }}</td>
                                 <td>
-                                <span [class]="'badge ' + getStatusClass(item.financial_charge?.status || '')">
-                                    {{ getStatusLabel(item.financial_charge?.status || '') }}
+                                <span [class]="'badge ' + getStatusClass(item.status)">
+                                    {{ getStatusLabel(item.status) }}
                                 </span>
                                 </td>
                             </tr>
@@ -244,3 +156,320 @@
        </div>
     </div>
 </div>
+
+<!-- Modal: crear / editar servicio del catálogo -->
+<app-modal
+  [isOpen]="showCatalogModal()"
+  [title]="editingCatalogService() ? 'Editar servicio' : 'Agregar servicio'"
+  icon="home_repair_service"
+  subtitle="Este servicio quedará disponible para asignar o para que los residentes lo contraten"
+  [closeOnBackdrop]="!isSubmittingCatalog()"
+  [closeOnEsc]="!isSubmittingCatalog()"
+  [showCloseButton]="!isSubmittingCatalog()"
+  (closed)="closeCatalogModal()"
+>
+  <div modal-body>
+    <form class="aura-form" (ngSubmit)="submitCatalogForm()">
+      <div class="form-group">
+        <label for="catalog-title">Título</label>
+        <input
+          type="text"
+          id="catalog-title"
+          name="catalog-title"
+          [(ngModel)]="catalogTitle"
+          [disabled]="isSubmittingCatalog()"
+          placeholder="Ej. Jardinería y Poda de Césped"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="catalog-description">Descripción</label>
+        <textarea
+          id="catalog-description"
+          name="catalog-description"
+          rows="3"
+          [(ngModel)]="catalogDescription"
+          [disabled]="isSubmittingCatalog()"
+          placeholder="Detalle del servicio..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="catalog-price">Precio (MXN)</label>
+        <input
+          type="number"
+          id="catalog-price"
+          name="catalog-price"
+          min="0"
+          step="0.01"
+          [(ngModel)]="catalogPrice"
+          [disabled]="isSubmittingCatalog()"
+          placeholder="0.00"
+          required>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label for="catalog-active">
+          <input
+            type="checkbox"
+            id="catalog-active"
+            name="catalog-active"
+            [(ngModel)]="catalogIsActive"
+            [disabled]="isSubmittingCatalog()">
+          Servicio activo (visible para asignar/contratar)
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label for="catalog-images">Imágenes {{ editingCatalogService() ? '(se agregarán a las existentes)' : '' }}</label>
+        <input
+          type="file"
+          id="catalog-images"
+          name="catalog-images"
+          accept="image/*"
+          multiple
+          [disabled]="isSubmittingCatalog()"
+          (change)="onCatalogImagesSelected($event)">
+      </div>
+
+      @if (editingCatalogService()?.image_urls?.length) {
+        <div class="catalog-image-preview">
+          @for (url of editingCatalogService()?.image_urls; track url) {
+            <img [src]="url" alt="Imagen del servicio">
+          }
+        </div>
+      }
+
+      @if (catalogFormError()) {
+        <div class="form-feedback error aura-row-enter">
+          <span class="material-symbols-outlined">error</span>
+          {{ catalogFormError() }}
+        </div>
+      }
+    </form>
+  </div>
+
+  <div modal-footer>
+    <button type="button" class="btn-secondary" [disabled]="isSubmittingCatalog()" (click)="closeCatalogModal()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn-primary"
+      [disabled]="isSubmittingCatalog() || !catalogTitle.trim() || !catalogPrice"
+      (click)="submitCatalogForm()"
+    >
+      @if (isSubmittingCatalog()) {
+        <app-spinner variant="light" />
+        Guardando...
+      } @else {
+        <span class="material-symbols-outlined">save</span>
+        Guardar servicio
+      }
+    </button>
+  </div>
+</app-modal>
+
+<!-- Modal: confirmar eliminación de servicio del catálogo -->
+<app-modal
+  [isOpen]="deletingCatalogService() !== null"
+  headerClass="danger"
+  icon="delete"
+  title="Eliminar servicio"
+  subtitle="Esta acción no se puede deshacer"
+  [closeOnBackdrop]="!isDeletingCatalog()"
+  [closeOnEsc]="!isDeletingCatalog()"
+  [showCloseButton]="!isDeletingCatalog()"
+  (closed)="closeDeleteCatalogModal()"
+>
+  <div modal-body>
+    @if (deletingCatalogService(); as service) {
+      <p>¿Confirmas que quieres eliminar <strong>{{ service.title }}</strong> del catálogo de servicios?</p>
+    }
+  </div>
+
+  <div modal-footer>
+    <button type="button" class="btn-secondary" [disabled]="isDeletingCatalog()" (click)="closeDeleteCatalogModal()">
+      Cancelar
+    </button>
+    <button type="button" class="btn-reject" [disabled]="isDeletingCatalog()" (click)="confirmDeleteCatalogService()">
+      @if (isDeletingCatalog()) {
+        <app-spinner variant="light" />
+        Eliminando...
+      } @else {
+        <span class="material-symbols-outlined">delete</span>
+        Sí, eliminar
+      }
+    </button>
+  </div>
+</app-modal>
+
+<!-- Modal: asignar servicio a un residente -->
+<app-modal
+  [isOpen]="assigningService() !== null"
+  [title]="'Asignar servicio: ' + (assigningService()?.title || '')"
+  icon="handshake"
+  subtitle="Define residente, residencia y horario exacto. El servicio quedará agendado con su código QR."
+  maxWidth="720px"
+  [closeOnBackdrop]="!isSubmittingAssign()"
+  [closeOnEsc]="!isSubmittingAssign()"
+  [showCloseButton]="!isSubmittingAssign()"
+  (closed)="closeAssignModal()"
+>
+  <div modal-body>
+    <form class="aura-form" (ngSubmit)="submitAssign()">
+      <div class="form-group">
+        <label for="assign-resident">Residente</label>
+        <select
+          id="assign-resident"
+          name="assign-resident"
+          [(ngModel)]="assignResidentId"
+          [disabled]="isSubmittingAssign() || isLoadingResidents()"
+          (ngModelChange)="onAssignResidentChange()"
+          required>
+          <option [ngValue]="null">Selecciona un residente</option>
+          @for (resident of residentsList(); track resident.id) {
+            <option [ngValue]="resident.id">{{ resident.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="assign-residence">Residencia</label>
+        <select
+          id="assign-residence"
+          name="assign-residence"
+          [(ngModel)]="assignResidenceId"
+          [disabled]="isSubmittingAssign() || isLoadingResidences() || !assignResidentId"
+          required>
+          <option [ngValue]="null">
+            {{ isLoadingResidences() ? 'Cargando residencias...' : 'Selecciona una residencia' }}
+          </option>
+          @for (residence of residentResidences(); track residence.id) {
+            <option [ngValue]="residence.id">
+              {{ residence.address?.name || 'Sin dirección' }} - {{ residence.block }} {{ residence.number }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="assign-date">Fecha</label>
+          <input
+            type="date"
+            id="assign-date"
+            name="assign-date"
+            [(ngModel)]="assignDate"
+            [disabled]="isSubmittingAssign()"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="assign-time-from">Hora inicio</label>
+          <input
+            type="time"
+            id="assign-time-from"
+            name="assign-time-from"
+            [(ngModel)]="assignTimeFrom"
+            [disabled]="isSubmittingAssign()"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="assign-time-to">Hora fin</label>
+          <input
+            type="time"
+            id="assign-time-to"
+            name="assign-time-to"
+            [(ngModel)]="assignTimeTo"
+            [disabled]="isSubmittingAssign()"
+            required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="assign-notes">Notas (opcional)</label>
+        <textarea
+          id="assign-notes"
+          name="assign-notes"
+          rows="2"
+          [(ngModel)]="assignNotes"
+          [disabled]="isSubmittingAssign()"
+          placeholder="Instrucciones adicionales..."></textarea>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label for="assign-mark-paid">
+          <input
+            type="checkbox"
+            id="assign-mark-paid"
+            name="assign-mark-paid"
+            [(ngModel)]="assignMarkAsPaid"
+            [disabled]="isSubmittingAssign()">
+          Ya se recibió el pago de este servicio
+        </label>
+      </div>
+
+      @if (assignMarkAsPaid) {
+        <div class="form-group">
+          <label for="assign-payment-method">Método de pago recibido</label>
+          <select
+            id="assign-payment-method"
+            name="assign-payment-method"
+            [(ngModel)]="assignPaymentMethod"
+            [disabled]="isSubmittingAssign()">
+            <option value="">Selecciona un método</option>
+            <option value="cash">Efectivo</option>
+            <option value="transfer">Transferencia</option>
+            <option value="card">Tarjeta</option>
+            <option value="check">Cheque</option>
+          </select>
+        </div>
+      }
+
+      @if (assignError()) {
+        <div class="form-feedback error aura-row-enter">
+          <span class="material-symbols-outlined">error</span>
+          {{ assignError() }}
+        </div>
+      }
+    </form>
+  </div>
+
+  <div modal-footer>
+    <button type="button" class="btn-secondary" [disabled]="isSubmittingAssign()" (click)="closeAssignModal()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn-primary"
+      [disabled]="isSubmittingAssign() || !assignResidentId || !assignResidenceId"
+      (click)="submitAssign()"
+    >
+      @if (isSubmittingAssign()) {
+        <app-spinner variant="light" />
+        Asignando...
+      } @else {
+        <span class="material-symbols-outlined">event_available</span>
+        Asignar y agendar
+      }
+    </button>
+  </div>
+</app-modal>
+
+<!-- Modal: detalle / agendado de una contratación -->
+<app-modal
+  [isOpen]="selectedContractedService() !== null"
+  [title]="selectedContractedService()?.service?.title || 'Detalle del servicio'"
+  [subtitle]="selectedContractedService() && needsSchedule(selectedContractedService()!) ? 'Este servicio necesita horario' : 'Detalle de la contratación'"
+  icon="engineering"
+  maxWidth="760px"
+  (closed)="closeDetailModal()"
+>
+  <div modal-body>
+    <app-contracted-service-detail
+      [item]="selectedContractedService()"
+      (updated)="onContractedServiceUpdated()"
+    />
+  </div>
+</app-modal>

@@ -324,13 +324,33 @@ li {
 }
 
 .badge-created {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge-scheduled {
   background: #dbeafe;
-  color: #2563eb;
+  color: #195491;
 }
 
 .badge-in-progress {
-   background: #fef3c7;
-  color: #d97706;
+  background-color: #cfe2ff;
+  color: #084298;
+}
+
+.badge-completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge-refunded {
+  background-color: #ffde9d;
+  color: #f07b1b;
+}
+
+.badge-cancelled {
+  background-color: #f8d7da;
+  color: #842029;
 }
 
 .service-icon {
@@ -423,4 +443,8 @@ li {
 
 .badge-attended-bar {
   background: #16a34a;
+}
+
+.clickable-row {
+  cursor: pointer;
 }

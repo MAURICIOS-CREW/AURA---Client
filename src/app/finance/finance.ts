@@ -5,6 +5,7 @@ import {
   FinanceService,
   FinanceSummary,
   FinanceMovement,
+  Expense,
   ExpenseCategory,
   ExpenseStatus,
   ExpensePaymentMethod,
@@ -15,6 +16,12 @@ import { ModalComponent } from '../shared/components/modal/modal';
 import { ReportGeneratorComponent } from '../shared/components/report-generator/report-generator';
 
 type TransferAction = 'approve' | 'reject';
+
+interface MovementDetail {
+  kind: 'payment' | 'expense';
+  payment?: PaymentTransfer;
+  expense?: Expense;
+}
 
 @Component({
   selector: 'app-finance',
@@ -40,6 +47,12 @@ export class Finance implements OnInit, OnDestroy {
   isProcessingTransfer = signal<boolean>(false);
   transferFeedback = signal<{ type: 'success' | 'error'; message: string } | null>(null);
   private transferFeedbackTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  movementDetail = signal<MovementDetail | null>(null);
+  isLoadingMovementDetail = signal<boolean>(false);
+  movementDetailError = signal<string>('');
+  isReceiptImageLoading = signal<boolean>(true);
+  isReceiptImageBroken = signal<boolean>(false);
 
   concept: string = '';
   description: string = '';
@@ -273,5 +286,84 @@ export class Finance implements OnInit, OnDestroy {
     this.transferFeedbackTimeoutId = setTimeout(() => {
       this.transferFeedback.set(null);
     }, 4000);
+  }
+
+  openTransferDetail(transfer: PaymentTransfer): void {
+    this.movementDetailError.set('');
+    this.resetReceiptImageState();
+    this.movementDetail.set({ kind: 'payment', payment: transfer });
+  }
+
+  openMovementDetail(movement: FinanceMovement): void {
+    this.movementDetailError.set('');
+    this.resetReceiptImageState();
+
+    const numericId = Number(movement.id.replace(/^income-|^expense-/, ''));
+
+    if (!numericId) {
+      return;
+    }
+
+    this.isLoadingMovementDetail.set(true);
+    this.movementDetail.set(null);
+
+    if (movement.type === 'income') {
+      this.financeService.getPayment(numericId).subscribe({
+        next: (response) => {
+          this.isLoadingMovementDetail.set(false);
+          this.movementDetail.set({ kind: 'payment', payment: response.data });
+        },
+        error: (error) => {
+          console.error('Error cargando el detalle del pago:', error);
+          this.isLoadingMovementDetail.set(false);
+          this.movementDetailError.set('No se pudo cargar el detalle de este movimiento.');
+        }
+      });
+    } else {
+      this.financeService.getExpense(numericId).subscribe({
+        next: (response) => {
+          this.isLoadingMovementDetail.set(false);
+          this.movementDetail.set({ kind: 'expense', expense: response.data });
+        },
+        error: (error) => {
+          console.error('Error cargando el detalle del egreso:', error);
+          this.isLoadingMovementDetail.set(false);
+          this.movementDetailError.set('No se pudo cargar el detalle de este movimiento.');
+        }
+      });
+    }
+  }
+
+  closeMovementDetail(): void {
+    this.movementDetail.set(null);
+    this.movementDetailError.set('');
+  }
+
+  approveFromDetail(transfer: PaymentTransfer): void {
+    this.closeMovementDetail();
+    this.askApproveTransfer(transfer);
+  }
+
+  rejectFromDetail(transfer: PaymentTransfer): void {
+    this.closeMovementDetail();
+    this.askRejectTransfer(transfer);
+  }
+
+  canReviewTransfer(payment: PaymentTransfer): boolean {
+    return payment.payment_method === 'transfer' && payment.status === 'pending';
+  }
+
+  resetReceiptImageState(): void {
+    this.isReceiptImageLoading.set(true);
+    this.isReceiptImageBroken.set(false);
+  }
+
+  onReceiptImageLoad(): void {
+    this.isReceiptImageLoading.set(false);
+  }
+
+  onReceiptImageError(): void {
+    this.isReceiptImageLoading.set(false);
+    this.isReceiptImageBroken.set(true);
   }
 }

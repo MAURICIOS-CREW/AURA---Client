@@ -27,6 +27,7 @@ export interface Expense {
   payment_method: ExpensePaymentMethod | null;
   status: ExpenseStatus;
   receipt: string | null;
+  receipt_url: string | null;
   created_at: string;
   updated_at: string;
 
@@ -162,11 +163,19 @@ export class FinanceService {
     return this.http.get<ExpensesApiResponse>(this.expensesUrl);
   }
 
+  getExpense(id: number): Observable<ExpenseApiResponse> {
+    return this.http.get<ExpenseApiResponse>(`${this.expensesUrl}/${id}`);
+  }
+
   createExpense(payload: CreateExpensePayload): Observable<ExpenseApiResponse> {
     return this.http.post<ExpenseApiResponse>(this.expensesUrl, payload);
   }
 
   deleteExpense(id: number): Observable<{ status: string; message: string }> {
     return this.http.delete<{ status: string; message: string }>(`${this.expensesUrl}/${id}`);
+  }
+
+  getPayment(id: number): Observable<PaymentTransferApiResponse> {
+    return this.http.get<PaymentTransferApiResponse>(`${this.paymentsUrl}/${id}`);
   }
 }

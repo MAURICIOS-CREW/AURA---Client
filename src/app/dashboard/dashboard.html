@@ -273,7 +273,7 @@
                 </tr>
               }
 
-            } @else if (pendingServices().length === 0) {
+            } @else if (sortedPendingServices().length === 0) {
 
               <tr>
                 <td colspan="4" class="text-center py-4">
@@ -283,9 +283,12 @@
 
             } @else {
 
-              @for (item of pendingServices(); track item.id; let i = $index) {
-                <tr class="aura-row-enter" [style.--i]="i">
+              @for (item of sortedPendingServices(); track item.id; let i = $index) {
+                <tr class="aura-row-enter clickable-row" [style.--i]="i" (click)="openServiceModal(item)">
                   <td>
+                    @if (needsSchedule(item)) {
+                      <span class="priority-dot" title="Sin horario asignado"></span>
+                    }
                     {{ item.created_at | date:'dd MMM yyyy · HH:mm' }}
                   </td>
                   <td>
@@ -378,5 +381,21 @@
             </div>
         </div>
     </div>
+
+<app-modal
+  [isOpen]="selectedContractedService() !== null"
+  [title]="selectedContractedService()?.service?.title || 'Detalle del servicio'"
+  [subtitle]="selectedContractedService() && needsSchedule(selectedContractedService()!) ? 'Este servicio necesita horario' : 'Detalle de la contratación'"
+  icon="engineering"
+  maxWidth="760px"
+  (closed)="closeServiceModal()"
+>
+  <div modal-body>
+    <app-contracted-service-detail
+      [item]="selectedContractedService()"
+      (updated)="onContractedServiceUpdated()"
+    />
+  </div>
+</app-modal>
 
 </div>

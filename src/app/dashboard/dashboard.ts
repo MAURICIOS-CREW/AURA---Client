@@ -1,16 +1,23 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccessLogService, AccessLog } from '../services/access-log.service';
 import { IncidentService, IncidentServiceItem } from '../services/incident.service';
 import { ContractedService, ContractedServiceItem } from '../services/contracted.service';
 import { UserService, Resident } from '../services/user.service';
 import { ReportGeneratorComponent } from '../shared/components/report-generator/report-generator';
+import { ModalComponent } from '../shared/components/modal/modal';
+import { ContractedServiceDetail } from '../shared/components/contracted-service-detail/contracted-service-detail';
+import {
+  contractedServiceNeedsSchedule,
+  getContractedServiceStatusClass,
+  getContractedServiceStatusLabel,
+} from '../shared/utils/contracted-service-status';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ReportGeneratorComponent],
+  imports: [CommonModule, ReportGeneratorComponent, ModalComponent, ContractedServiceDetail],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -26,6 +33,23 @@ private contractedService = inject(ContractedService);
   pendingServices = signal<ContractedServiceItem[]>([]);
   completedServicesThisMonth = signal<number>(0);
   openIncidents = signal<number>(0);
+
+  selectedContractedService = signal<ContractedServiceItem | null>(null);
+
+  // Mismo criterio de prioridad que list-of-services: los servicios 'created'
+  // (sin horario) van primero; el resto conserva el orden por fecha de creación.
+  sortedPendingServices = computed(() => {
+    return [...this.pendingServices()].sort((a, b) => {
+      const aNeedsSchedule = this.needsSchedule(a) ? 0 : 1;
+      const bNeedsSchedule = this.needsSchedule(b) ? 0 : 1;
+
+      if (aNeedsSchedule !== bNeedsSchedule) {
+        return aNeedsSchedule - bNeedsSchedule;
+      }
+
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+  });
 
   isLoadingAccessLogs = signal<boolean>(true);
   isLoadingResidents = signal<boolean>(true);
@@ -232,30 +256,26 @@ getMethodLabel(method: string): string {
   }
 }
 
-getServiceStatusClass(status: string): string {
-  switch (status?.toLowerCase()) {
-    case 'created':
-      return 'badge-created';
+getServiceStatusClass = getContractedServiceStatusClass;
+getServiceStatusLabel = getContractedServiceStatusLabel;
 
-    case 'in_progress':
-      return 'badge-in-progress';
-
-    default:
-      return 'badge-unknown';
-  }
+needsSchedule(item: ContractedServiceItem): boolean {
+  return contractedServiceNeedsSchedule(item.status);
 }
 
-getServiceStatusLabel(status: string): string {
-  switch (status?.toLowerCase()) {
-    case 'created':
-      return 'Creado';
+openServiceModal(item: ContractedServiceItem): void {
+  this.selectedContractedService.set(item);
+}
 
-    case 'in_progress':
-      return 'En progreso';
+closeServiceModal(): void {
+  this.selectedContractedService.set(null);
+}
 
-    default:
-      return 'Desconocido';
-  }
+onContractedServiceUpdated(): void {
+  // El item puede salir del filtro de "pendientes" (p. ej. al agendarlo o completarlo),
+  // así que se cierra el modal en vez de dejarlo mostrando datos obsoletos.
+  this.selectedContractedService.set(null);
+  this.fetchPendingServices();
 }
 
 }

@@ -1,0 +1,219 @@
+@if (item(); as current) {
+
+  <div class="csd">
+
+    <div class="csd__header">
+      <div>
+        <span class="csd__label">Servicio</span>
+        <h3>{{ current.service?.title || 'Servicio general' }}</h3>
+      </div>
+
+      <span [class]="'badge ' + getStatusClass(current.status)">
+        {{ getStatusLabel(current.status) }}
+      </span>
+    </div>
+
+    <div class="csd__info">
+      <div class="csd__item">
+        <span class="csd__label">Residente</span>
+        <strong>{{ current.user?.name || 'No disponible' }}</strong>
+      </div>
+
+      <div class="csd__item">
+        <span class="csd__label">Residencia</span>
+        <strong>
+          {{ current.residence?.address?.name || 'Sin dirección' }}
+          @if (current.residence?.address?.cp) {
+            · CP {{ current.residence?.address?.cp }}
+          }
+        </strong>
+      </div>
+
+      <div class="csd__item">
+        <span class="csd__label">Monto</span>
+        <strong>{{ current.amount || current.service?.price | currency:'MXN':'symbol':'1.2-2' }}</strong>
+      </div>
+
+      <div class="csd__item">
+        <span class="csd__label">Fecha preferida</span>
+        <strong>{{ current.preferred_date | date:'dd MMM yyyy' }}</strong>
+      </div>
+
+      <div class="csd__item">
+        <span class="csd__label">Rango horario solicitado</span>
+        <strong>{{ current.visit_time_from }} - {{ current.visit_time_to }}</strong>
+      </div>
+
+      <div class="csd__item">
+        <span class="csd__label">Horario exacto agendado</span>
+        <strong>
+          @if (current.exact_scheduled_at) {
+            {{ current.exact_scheduled_at | date:'dd MMM yyyy · HH:mm' }}
+          } @else {
+            Sin definir
+          }
+        </strong>
+      </div>
+    </div>
+
+    @if (current.notes) {
+      <div class="csd__description">
+        <span class="csd__label">Notas</span>
+        <p>{{ current.notes }}</p>
+      </div>
+    }
+
+    @if (current.financial_charge; as charge) {
+      <div class="csd__payment">
+        <div class="csd__section-header">
+          <span class="csd__label">Cargo y pago asociado</span>
+          <span [class]="'badge ' + getChargeStatusClass(charge.status)">
+            {{ getChargeStatusLabel(charge.status) }}
+          </span>
+        </div>
+
+        @if (charge.payments && charge.payments.length > 0) {
+          <div class="csd__payments-list">
+            @for (payment of charge.payments; track payment.id) {
+              <div class="csd__payment-row">
+                <span>{{ payment.created_at | date:'dd MMM yyyy · HH:mm' }}</span>
+                <span>{{ payment.amount | currency:'MXN':'symbol':'1.2-2' }}</span>
+                <span class="csd__payment-method">{{ payment.payment_method }}</span>
+                <span [class]="'badge ' + getChargeStatusClass(payment.status === 'approved' ? 'paid' : payment.status)">
+                  {{ payment.status }}
+                </span>
+                @if (payment.receipt_url) {
+                  <a [href]="payment.receipt_url" target="_blank" rel="noopener" class="csd__receipt-link">
+                    <span class="material-symbols-outlined">receipt_long</span> Comprobante
+                  </a>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="csd__muted">Sin pagos registrados todavía para este cargo.</p>
+        }
+      </div>
+    }
+
+    @if (needsSchedule(current)) {
+
+      <div class="csd__form">
+        <div class="csd__section-header">
+          <span class="csd__label">Asignar horario exacto</span>
+        </div>
+
+        <p class="csd__hint">
+          Este servicio fue solicitado sin horario exacto. Defínelo para generar el código QR
+          de acceso y notificar al residente.
+        </p>
+
+        <div class="csd__form-row">
+          <label for="csd-schedule-datetime">Fecha y hora exacta</label>
+          <input
+            type="datetime-local"
+            id="csd-schedule-datetime"
+            [value]="scheduleDateTime()"
+            [disabled]="isSubmittingSchedule()"
+            (input)="scheduleDateTime.set($any($event.target).value)"
+          >
+        </div>
+
+        <div class="csd__form-row">
+          <label for="csd-schedule-notes">Notas (opcional)</label>
+          <textarea
+            id="csd-schedule-notes"
+            rows="3"
+            [value]="scheduleNotes()"
+            [disabled]="isSubmittingSchedule()"
+            (input)="scheduleNotes.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        @if (scheduleError()) {
+          <div class="csd__inline-error aura-row-enter">
+            <span class="material-symbols-outlined">error</span>
+            {{ scheduleError() }}
+          </div>
+        }
+
+        <button
+          type="button"
+          class="csd__primary-button"
+          [disabled]="!scheduleDateTime() || isSubmittingSchedule()"
+          (click)="submitSchedule()"
+        >
+          @if (isSubmittingSchedule()) {
+            <app-spinner variant="light" /> Agendando...
+          } @else {
+            <span class="material-symbols-outlined">event_available</span> Agendar servicio
+          }
+        </button>
+      </div>
+
+    } @else if (!isTerminal(current)) {
+
+      <div class="csd__form">
+        <div class="csd__section-header">
+          <span class="csd__label">Avanzar estado del servicio</span>
+        </div>
+
+        <div class="csd__form-row">
+          <label for="csd-next-status">Nuevo estado</label>
+          <select
+            id="csd-next-status"
+            [value]="selectedNextStatus()"
+            [disabled]="isUpdatingStatus()"
+            (change)="selectedNextStatus.set($any($event.target).value)"
+          >
+            <option value="">Selecciona un estado</option>
+            @for (option of nextStatusOptions(current); track option) {
+              <option [value]="option">{{ getStatusOptionLabel(option) }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="csd__form-row">
+          <label for="csd-status-notes">Notas (opcional)</label>
+          <textarea
+            id="csd-status-notes"
+            rows="2"
+            [value]="statusNotes()"
+            [disabled]="isUpdatingStatus()"
+            (input)="statusNotes.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        @if (statusError()) {
+          <div class="csd__inline-error aura-row-enter">
+            <span class="material-symbols-outlined">error</span>
+            {{ statusError() }}
+          </div>
+        }
+
+        @if (statusUpdateSuccess()) {
+          <div class="csd__inline-success aura-row-enter">
+            <span class="material-symbols-outlined">check_circle</span>
+            Estado actualizado correctamente.
+          </div>
+        }
+
+        <button
+          type="button"
+          class="csd__primary-button"
+          [disabled]="!selectedNextStatus() || isUpdatingStatus()"
+          (click)="submitStatusUpdate()"
+        >
+          @if (isUpdatingStatus()) {
+            <app-spinner variant="light" /> Actualizando...
+          } @else {
+            <span class="material-symbols-outlined">sync_alt</span> Actualizar estado
+          }
+        </button>
+      </div>
+
+    }
+
+  </div>
+
+}

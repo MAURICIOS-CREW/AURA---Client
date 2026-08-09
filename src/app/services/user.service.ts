@@ -17,6 +17,25 @@ export interface ResidentsResponse {
   data: Resident[];
 }
 
+export interface ResidentResidence {
+  id: number;
+  address_id: number;
+  block: string;
+  number: string;
+  intercom_number?: string | null;
+
+  address?: {
+    id: number;
+    name: string;
+    cp: string;
+  };
+}
+
+export interface ResidentResidencesResponse {
+  status: string;
+  data: ResidentResidence[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,5 +46,9 @@ export class UserService {
 
   getResidents(): Observable<ResidentsResponse> {
     return this.http.get<ResidentsResponse>(this.apiUrl);
+  }
+
+  getResidentResidences(userId: number): Observable<ResidentResidencesResponse> {
+    return this.http.get<ResidentResidencesResponse>(`${this.apiUrl}/${userId}/residences`);
   }
 }
