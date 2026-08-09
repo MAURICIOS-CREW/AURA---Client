@@ -15,14 +15,23 @@
     </div>
     
     <div class="card-body">
-    <form class="aura-form">
+    <form class="aura-form" (ngSubmit)="onSubmit()">
         <div class="form-group">
-        <label for="id_usuario_report">Usuario que reporta</label>
-        <input
-            type="number"
-            id="id_usuario_report"
-            name="id_usuario_report"
-            placeholder="Ej. 1024">
+            <label for="reporter_user_id">Usuario que reporta</label>
+            <p>Residentes actuales: {{ residentsList().length }}</p>
+            <select
+                id="reporter_user_id"
+                name="reporter_user_id"
+                [(ngModel)]="reporterUserId"
+            >
+                <option value="">Selecciona un residente</option>
+
+                @for (resident of residentsList(); track resident.id) {
+                    <option [value]="resident.id">
+                        {{ resident.name }}
+                    </option>
+                }
+            </select>
         </div>
 
         <div class="form-group">
@@ -31,6 +40,7 @@
             type="text"
             id="title"
             name="title"
+            [(ngModel)]="title"
             placeholder="Título de la incidencia">
         </div>
 
@@ -40,17 +50,23 @@
             id="description"
             name="description"
             rows="4"
+            [(ngModel)]="description"
             placeholder="¿Qué paso?..."></textarea>
         </div>
 
         <div class="form-group">
         <label for="status">Estado</label>
-        <select id="status" name="status">
+        <select
+            id="status"
+            name="status"
+            [(ngModel)]="status"
+            >
             <option value="">Selecciona un estado</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="proceso">En proceso</option>
-            <option value="resuelto">Resuelto</option>
-        </select>
+            <option value="open">Abierto</option>
+            <option value="viewed">Visto</option>
+            <option value="in_progress">En progreso</option>
+            <option value="attended">Atendido</option>
+            </select>
         </div>
 
         <button type="submit" class="btn-primary incident">
@@ -97,7 +113,7 @@
                             </tr>
                         } @else {
                             @for (item of incidentsList(); track item.id) {
-                            <tr>
+                            <tr (click)="openIncidentModal(item)" class="incident-row">
                                 <td>{{ item.created_at | date:'dd MMM yyyy · HH:mm' }}</td>
                                 <td>{{ item.title || 'Servicio General' }}</td>
                                 <td>{{ item.description || 'Sin descripción' }}</td>
@@ -114,3 +130,16 @@
   </div>
 </div>
 </div>
+
+<app-modal
+  [isOpen]="showIncidentModal()"
+  [title]="selectedIncident()?.title || 'Detalle de incidencia'"
+  (closed)="closeIncidentModal()"
+>
+
+<app-incident-detail
+  [incident]="selectedIncident()"
+  (statusUpdated)="onStatusUpdated($event)"
+/>
+
+</app-modal>

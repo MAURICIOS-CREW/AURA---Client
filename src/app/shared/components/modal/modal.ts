@@ -55,7 +55,7 @@ export class ModalComponent implements OnChanges, OnDestroy {
   }
 
   @HostListener('document:keydown.escape', ['$event'])
-  handleEscapeKey(event: KeyboardEvent): void {
+  handleEscapeKey(event: Event): void {
     if (this.isOpen && this.closeOnEsc) {
       event.preventDefault();
       this.close();

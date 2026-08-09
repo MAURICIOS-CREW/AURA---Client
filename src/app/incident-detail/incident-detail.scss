@@ -1,0 +1,363 @@
+.incident-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.incident-detail__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.incident-detail__header h3 {
+  margin: 0.25rem 0 0;
+  color: #195491;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.incident-detail__label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.incident-detail__info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.incident-detail__item {
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.incident-detail__item strong {
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.incident-detail__description {
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.incident-detail__description p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-open {
+  background: #e8f1fb;
+  color: #195491;
+}
+
+.badge-in-progress {
+  background: #e8f5fb;
+  color: #287ea8;
+}
+
+.badge-attended {
+  background: #e8f7ef;
+  color: #237a4b;
+}
+
+.badge-viewed {
+  background: #eef0f2;
+  color: #59636e;
+}
+
+.badge-cancelled {
+  background: #fdecec;
+  color: #b42318;
+}
+
+@media (max-width: 700px) {
+
+  .incident-detail__header {
+    flex-direction: column;
+  }
+
+  .incident-detail__info {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+.status-select {
+  min-width: 160px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.status-select:hover {
+  border-color: #3d92d5;
+}
+
+.status-select:focus {
+  border-color: #195491;
+  box-shadow: 0 0 0 3px rgba(25, 84, 145, 0.12);
+}
+
+.save-status-button {
+  align-self: flex-start;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #195491;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.save-status-button:hover {
+  background: #3d92d5;
+}
+
+.save-status-button:active {
+  transform: translateY(1px);
+}
+
+.incident-detail__comments {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+
+.incident-detail__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.incident-detail__section-header .incident-detail__label {
+  margin-bottom: 0;
+}
+
+
+.incident-detail__comments-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: #e8f1fb;
+  color: #195491;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+
+.incident-detail__comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+
+.incident-detail__comment {
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+
+.incident-detail__comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.65rem;
+}
+
+
+.incident-detail__comment-header strong {
+  color: #195491;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+
+.incident-detail__comment-header span {
+  color: #94a3b8;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+
+.incident-detail__comment p {
+  margin: 0;
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+
+.incident-detail__empty-comments {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+
+@media (max-width: 700px) {
+
+  .incident-detail__comment-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .incident-detail__comment-header span {
+    white-space: normal;
+  }
+
+}
+
+.incident-detail__comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+
+.incident-detail__comment-input {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1e293b;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.incident-detail__comment-input::placeholder {
+  color: #94a3b8;
+}
+
+
+.incident-detail__comment-input:hover {
+  border-color: #3d92d5;
+}
+
+
+.incident-detail__comment-input:focus {
+  border-color: #195491;
+  box-shadow: 0 0 0 3px rgba(25, 84, 145, 0.12);
+}
+
+
+.incident-detail__comment-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+
+.incident-detail__comment-hint {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+
+.incident-detail__comment-button {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #195491;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+
+.incident-detail__comment-button:hover:not(:disabled) {
+  background: #3d92d5;
+}
+
+
+.incident-detail__comment-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+
+.incident-detail__comment-button:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 700px) {
+
+  .incident-detail__comment-form-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .incident-detail__comment-button {
+    width: 100%;
+  }
+
+}

@@ -197,15 +197,16 @@ li {
   letter-spacing: .5px;
   text-transform: uppercase;
 
-  &.resident {
+  &.inactive {
     background: #e0f2fe;
     color: #2E6DB4;
   }
 
-  &.visit {
-    background: #fef3c7;
-    color: #b45309;
+  &.active {
+    background:#dcfce7;
+    color:#15803d;
   }
+  
 }
 
 /* ===========================

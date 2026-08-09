@@ -1,0 +1,157 @@
+@if (incident(); as item) {
+
+  <div class="incident-detail">
+    <div class="incident-detail__header">
+      <div>
+        <span class="incident-detail__label">
+          Incidencia
+        </span>
+
+        <h3>
+          {{ item.title }}
+        </h3>
+      </div>
+
+      <select
+        class="status-select"
+        [value]="selectedStatus()"
+        (change)="selectedStatus.set($any($event.target).value)"
+        >
+        <option value="open">Abierto</option>
+        <option value="viewed">Visto</option>
+        <option value="attended">Atendido</option>
+        <option value="cancelled">Cancelado</option>
+        <option value="in_progress">En progreso</option>
+        </select>
+
+        <button
+        type="button"
+        class="save-status-button"
+        (click)="saveStatus()"
+        >
+        Guardar estado
+        </button>
+
+    </div>
+
+
+    <div class="incident-detail__info">
+      <div class="incident-detail__item">
+        <span class="incident-detail__label">
+          ID
+        </span>
+
+        <strong>
+          #{{ item.id }}
+        </strong>
+      </div>
+
+      <div class="incident-detail__item">
+        <span class="incident-detail__label">
+          Reportado por
+        </span>
+
+        <strong>
+          {{ item.reporter?.name || 'No disponible' }}
+        </strong>
+      </div>
+
+      <div class="incident-detail__item">
+        <span class="incident-detail__label">
+          Fecha de creación
+        </span>
+
+        <strong>
+          {{ item.created_at | date:'dd MMM yyyy · HH:mm' }}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div class="incident-detail__description">
+      <span class="incident-detail__label">
+        Descripción
+      </span>
+      <p>
+        {{ item.description }}
+      </p>
+
+    </div>
+
+    <div class="incident-detail__comments">
+
+    <div class="incident-detail__section-header">
+        <span class="incident-detail__label">
+        Comentarios
+        </span>
+
+        <span class="incident-detail__comments-count">
+        {{ comments().length }}
+        </span>
+    </div>
+    
+    @if (comments().length > 0) {
+        <div class="incident-detail__comments-list">
+        @for (comment of comments(); track comment.id) {
+            <article class="incident-detail__comment">
+            <div class="incident-detail__comment-header">
+                <strong>
+                {{ comment.user?.name || 'Usuario desconocido' }}
+                </strong>
+                <span>
+                {{ comment.created_at | date:'dd MMM yyyy · HH:mm' }}
+                </span>
+            </div>
+            <p>
+                {{ comment.content }}
+            </p>
+            </article>
+        }
+        </div>
+
+    } @else {
+
+        <div class="incident-detail__empty-comments">
+            <span>No hay comentarios todavía.</span>
+            </div>
+    }
+    <div class="incident-detail__comment-form">
+        <label
+            for="incident-comment"
+            class="incident-detail__label"
+        >
+            Agregar comentario
+        </label>
+
+        <textarea
+            id="incident-comment"
+            class="incident-detail__comment-input"
+            rows="4"
+            placeholder="Escribe un comentario..."
+            [value]="commentContent()"
+            (input)="commentContent.set($any($event.target).value)"
+        ></textarea>
+
+        <div class="incident-detail__comment-form-footer">
+
+            <span class="incident-detail__comment-hint">
+            El comentario se asociará a esta incidencia.
+            </span>
+
+           <button
+            type="button"
+            class="incident-detail__comment-button"
+            [disabled]="!commentContent().trim()"
+            (click)="addComment()"
+            >
+            Enviar comentario
+            </button>
+        </div>
+
+    </div>
+
+    </div>
+  </div>
+
+}

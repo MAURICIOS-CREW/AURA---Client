@@ -18,6 +18,27 @@ export interface IncidentServiceItem {
   };
 }
 
+export interface CreateIncidentPayload {
+  reporter_user_id: number;
+  title: string;
+  description: string;
+  status: string;
+}
+
+export interface IncidentComment {
+  id: number;
+  incident_id: number;
+  user_id: number;
+  content: string;
+  created_at: string;
+  updated_at: string;
+
+  user?: {
+    id: number;
+    name: string;
+  };
+}
+
 export interface ApiResponse {
   status: string;
   data: IncidentServiceItem[];
@@ -32,15 +53,44 @@ export class IncidentService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/admin/incidents`;
 
-  getIncidents(): Observable<ApiResponse> {
+getIncidents(): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(this.apiUrl);
   }
 
-  getIncident(id: number): Observable<ApiResponse> {
+getIncident(id: number): Observable<ApiResponse> {
     return this.http.get<ApiResponse>(`${this.apiUrl}/${id}`);
   }
 
-  updateIncidentStatus(
+
+createIncident(payload: {
+  reporter_user_id: number | null;
+  title: string;
+  description: string;
+  status: string;
+}): Observable<IncidentServiceItem> {
+  return this.http.post<IncidentServiceItem>(
+    this.apiUrl,
+    payload
+  );
+}
+
+getIncidentComments(id: number): Observable<IncidentComment[]> {
+  return this.http.get<IncidentComment[]>(
+    `${this.apiUrl}/${id}/comments`
+  );
+  }
+
+addIncidentComment(
+  incidentId: number,
+  content: string
+  ): Observable<IncidentComment> {
+    return this.http.post<IncidentComment>(
+      `${this.apiUrl}/${incidentId}/comments`,
+      { content }
+    );
+  }
+
+updateIncidentStatus(
     id: number,
     status: IncidentServiceItem['status']
   ): Observable<ApiResponse> {
