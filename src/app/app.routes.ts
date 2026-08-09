@@ -10,12 +10,14 @@ import { MainLayout } from './layouts/main-layout/main-layout';
 import { Login } from './auth/login/login';
 import { ListOfServices } from './list-of-services/list-of-services';
 import { Profile } from './profile/profile';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
-  { 
-    path: '', 
-    component: MainLayout, 
+  {
+    path: '',
+    component: MainLayout,
+    canActivate: [authGuard],
     children: [
       { path: '', component: Dashboard },
       { path: 'residents', component: Residents },
